@@ -1,5 +1,6 @@
 package ru.steqa.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("${api.prefix}/transactions")
 @RequiredArgsConstructor
+@Tag(name = "Transaction")
 public class TransactionController {
     private final ITransactionService transactionService;
 
