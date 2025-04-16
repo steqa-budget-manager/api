@@ -1,0 +1,22 @@
+version: "3.8"
+
+name: budget-manager-api
+
+services:
+  db:
+    container_name: ${COMPOSE_PROJECT_NAME}-db
+    image: postgres:latest
+    restart: always
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=budget_manager
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+
+volumes:
+  postgres_data:
