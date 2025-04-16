@@ -1,10 +1,12 @@
 package ru.steqa.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -18,4 +20,9 @@ public class Account {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    @JsonIgnore
+    private Boolean deleted = false;
 }
