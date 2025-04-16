@@ -1,6 +1,7 @@
 package ru.steqa.api.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,6 +47,7 @@ public class Transaction {
     @Column(name = "category_id", insertable = false, updatable = false)
     private Long categoryId;
 
+    @Builder
     public Transaction(TransactionType type, Long amount, String description, Date date, Account account, TransactionCategory category) {
         this.type = type;
         this.amount = amount;

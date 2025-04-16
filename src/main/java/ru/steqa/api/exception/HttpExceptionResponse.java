@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @JsonPropertyOrder({ "status", "code", "message", "path", "timestamp" })
 public class HttpExceptionResponse {
-    private int status;
+    private Integer status;
     private String code;
     private String message;
     private String path;

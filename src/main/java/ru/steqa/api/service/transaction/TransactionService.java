@@ -32,38 +32,40 @@ public class TransactionService implements ITransactionService {
         TransactionCategory category = transactionCategoryRepository.findById(request.getCategoryId())
                 .orElseThrow(TransactionCategoryNotFoundException::new);
 
-        Transaction transactionToAdd = new Transaction(
-                request.getType(),
-                request.getAmount(),
-                request.getDescription(),
-                request.getDate(),
-                account,
-                category
-        );
+        Transaction transactionToAdd = Transaction.builder()
+                .type(request.getType())
+                .amount(request.getAmount())
+                .description(request.getDescription())
+                .date(request.getDate())
+                .account(account)
+                .category(category)
+                .build();
         Transaction transaction = transactionRepository.save(transactionToAdd);
-        return new ResponseTransactionSchema(
-                transaction.getId(),
-                transaction.getType(),
-                transaction.getAmount(),
-                transaction.getDescription(),
-                transaction.getDate(),
-                transaction.getAccountId(),
-                transaction.getCategoryId()
-        );
+        return ResponseTransactionSchema.builder()
+                .id(transaction.getId())
+                .type(transaction.getType())
+                .amount(transaction.getAmount())
+                .description(transaction.getDescription())
+                .date(transaction.getDate())
+                .accountId(transaction.getAccountId())
+                .categoryId(transaction.getCategoryId())
+                .build();
     }
 
     @Override
     public List<ResponseTransactionSchema> getTransactions() {
         return transactionRepository.findAll()
                 .stream()
-                .map(transaction -> new ResponseTransactionSchema(
-                        transaction.getId(),
-                        transaction.getType(),
-                        transaction.getAmount(),
-                        transaction.getDescription(),
-                        transaction.getDate(),
-                        transaction.getAccountId(),
-                        transaction.getCategoryId()))
+                .map(transaction -> ResponseTransactionSchema.builder()
+                        .id(transaction.getId())
+                        .type(transaction.getType())
+                        .amount(transaction.getAmount())
+                        .description(transaction.getDescription())
+                        .date(transaction.getDate())
+                        .accountId(transaction.getAccountId())
+                        .categoryId(transaction.getCategoryId())
+                        .build()
+                )
                 .toList();
     }
 
@@ -71,15 +73,15 @@ public class TransactionService implements ITransactionService {
     public ResponseTransactionSchema getTransactionById(Long id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(TransactionNotFoundException::new);
-        return new ResponseTransactionSchema(
-                transaction.getId(),
-                transaction.getType(),
-                transaction.getAmount(),
-                transaction.getDescription(),
-                transaction.getDate(),
-                transaction.getAccountId(),
-                transaction.getCategoryId()
-        );
+        return ResponseTransactionSchema.builder()
+                .id(transaction.getId())
+                .type(transaction.getType())
+                .amount(transaction.getAmount())
+                .description(transaction.getDescription())
+                .date(transaction.getDate())
+                .accountId(transaction.getAccountId())
+                .categoryId(transaction.getCategoryId())
+                .build();
     }
 
     @Override
@@ -108,15 +110,15 @@ public class TransactionService implements ITransactionService {
         if (request.getType() != null) transactionToUpdate.setType(request.getType());
 
         Transaction transaction = transactionRepository.save(transactionToUpdate);
-        return new ResponseTransactionSchema(
-                transaction.getId(),
-                transaction.getType(),
-                transaction.getAmount(),
-                transaction.getDescription(),
-                transaction.getDate(),
-                transaction.getAccountId(),
-                transaction.getCategoryId()
-        );
+        return ResponseTransactionSchema.builder()
+                .id(transaction.getId())
+                .type(transaction.getType())
+                .amount(transaction.getAmount())
+                .description(transaction.getDescription())
+                .date(transaction.getDate())
+                .accountId(transaction.getAccountId())
+                .categoryId(transaction.getCategoryId())
+                .build();
     }
 
     @Override

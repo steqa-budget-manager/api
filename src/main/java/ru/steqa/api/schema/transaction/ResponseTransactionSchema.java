@@ -1,5 +1,6 @@
 package ru.steqa.api.schema.transaction;
 
+import lombok.Builder;
 import lombok.Data;
 import ru.steqa.api.model.TransactionType;
 
@@ -15,6 +16,7 @@ public class ResponseTransactionSchema {
     private Long accountId;
     private Long categoryId;
 
+    @Builder
     public ResponseTransactionSchema(Long id, TransactionType type, Long amount,
                                      String description, Date date, Long accountId, Long categoryId) {
         this.id = id;
