@@ -1,7 +1,10 @@
 package ru.steqa.api.exception.transaction.category;
 
-public class TransactionCategoryNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import ru.steqa.api.exception.HttpException;
+
+public class TransactionCategoryNotFoundException extends HttpException {
     public TransactionCategoryNotFoundException() {
-        super("Transaction category not found");
+        super(HttpStatus.NOT_FOUND, "Transaction category not found");
     }
 }
