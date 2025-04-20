@@ -1,12 +1,10 @@
 package ru.steqa.api.schema.auth;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseJwtScheme {
     public String access;
     public String refresh;

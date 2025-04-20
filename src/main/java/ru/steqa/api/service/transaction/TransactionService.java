@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.transaction.TransactionNotFoundException;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryNotFoundException;
+import ru.steqa.api.exception.user.UserNotFoundException;
 import ru.steqa.api.model.Account;
 import ru.steqa.api.model.Transaction;
 import ru.steqa.api.model.TransactionCategory;
+import ru.steqa.api.model.User;
 import ru.steqa.api.repository.IAccountRepository;
 import ru.steqa.api.repository.ITransactionCategoryRepository;
 import ru.steqa.api.repository.ITransactionRepository;
+import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.schema.transaction.AddTransactionSchema;
 import ru.steqa.api.schema.transaction.ResponseTransactionSchema;
 import ru.steqa.api.schema.transaction.UpdateTransactionSchema;
@@ -21,15 +24,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionService implements ITransactionService {
     private final ITransactionRepository transactionRepository;
+    private final IUserRepository userRepository;
     private final IAccountRepository accountRepository;
     private final ITransactionCategoryRepository transactionCategoryRepository;
 
     @Override
-    public ResponseTransactionSchema addTransaction(AddTransactionSchema request) {
-        Account account = accountRepository.findById(request.getAccountId())
+    public ResponseTransactionSchema addTransaction(Long userId, AddTransactionSchema request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        Account account = accountRepository.findByUserIdAndId(userId, request.getAccountId())
                 .orElseThrow(AccountNotFoundException::new);
 
-        TransactionCategory category = transactionCategoryRepository.findById(request.getCategoryId())
+        TransactionCategory category = transactionCategoryRepository.findByUserIdAndId(userId, request.getCategoryId())
                 .orElseThrow(TransactionCategoryNotFoundException::new);
 
         Transaction transactionToAdd = Transaction.builder()
@@ -37,6 +44,7 @@ public class TransactionService implements ITransactionService {
                 .amount(request.getAmount())
                 .description(request.getDescription())
                 .date(request.getDate())
+                .user(user)
                 .account(account)
                 .category(category)
                 .build();
@@ -53,8 +61,8 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public List<ResponseTransactionSchema> getTransactions() {
-        return transactionRepository.findAll()
+    public List<ResponseTransactionSchema> getTransactions(Long userId) {
+        return transactionRepository.findAllByUserId(userId)
                 .stream()
                 .map(transaction -> ResponseTransactionSchema.builder()
                         .id(transaction.getId())
@@ -70,8 +78,8 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public ResponseTransactionSchema getTransactionById(Long id) {
-        Transaction transaction = transactionRepository.findById(id)
+    public ResponseTransactionSchema getTransactionById(Long userId, Long id) {
+        Transaction transaction = transactionRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionNotFoundException::new);
         return ResponseTransactionSchema.builder()
                 .id(transaction.getId())
@@ -85,19 +93,19 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public ResponseTransactionSchema updateTransaction(UpdateTransactionSchema request, Long id) {
-        Transaction transactionToUpdate = transactionRepository.findById(id)
+    public ResponseTransactionSchema updateTransaction(Long userId, Long id, UpdateTransactionSchema request) {
+        Transaction transactionToUpdate = transactionRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionNotFoundException::new);
 
         if (request.getAccountId() != null) {
-            Account account = accountRepository.findById(request.getAccountId())
+            Account account = accountRepository.findByUserIdAndId(userId, request.getAccountId())
                     .orElseThrow(AccountNotFoundException::new);
             transactionToUpdate.setAccount(account);
             transactionToUpdate.setAccountId(account.getId());
         }
 
         if (request.getCategoryId() != null) {
-            TransactionCategory category = transactionCategoryRepository.findById(request.getCategoryId())
+            TransactionCategory category = transactionCategoryRepository.findByUserIdAndId(userId, request.getCategoryId())
                     .orElseThrow(TransactionCategoryNotFoundException::new);
             transactionToUpdate.setCategory(category);
             transactionToUpdate.setCategoryId(category.getId());
@@ -122,8 +130,8 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public void deleteTransactionById(Long id) {
-        transactionRepository.findById(id)
+    public void deleteTransactionById(Long userId, Long id) {
+        transactionRepository.findByUserIdAndId(userId, id)
                 .ifPresentOrElse(transactionRepository::delete, () -> {
                     throw new TransactionNotFoundException();
                 });

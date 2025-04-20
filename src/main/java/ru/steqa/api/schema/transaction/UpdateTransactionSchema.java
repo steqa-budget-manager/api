@@ -3,7 +3,6 @@ package ru.steqa.api.schema.transaction;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import ru.steqa.api.model.TransactionType;
@@ -15,11 +14,9 @@ import java.time.LocalDate;
 
 @Data
 public class UpdateTransactionSchema {
-    @NotNull
     @ValidEnum(enumClass = TransactionType.class)
     private String type;
 
-    @NotNull
     @Min(0)
     @Max(Long.MAX_VALUE)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
@@ -28,46 +25,39 @@ public class UpdateTransactionSchema {
     @Length(max = 1000, message = "length must be less than or equal to 1000")
     private String description;
 
-    @NotNull
     @ValidDate
     private String date;
 
-    @NotNull
-    @Min(0)
-    @Max(Long.MAX_VALUE)
-    private BigInteger userId;
-
-    @NotNull
     @Min(0)
     @Max(Long.MAX_VALUE)
     private BigInteger accountId;
 
-    @NotNull
     @Min(0)
     @Max(Long.MAX_VALUE)
     private BigInteger categoryId;
 
     public TransactionType getType() {
+        if (type == null) return null;
         return TransactionType.valueOf(type);
     }
 
     public Long getAmount() {
+        if (amount == null) return null;
         return amount.longValue();
     }
 
     public LocalDate getDate() {
+        if (date == null) return null;
         return LocalDate.parse(date);
     }
 
-    public Long getUserId() {
-        return userId.longValue();
-    }
-
     public Long getAccountId() {
+        if (accountId == null) return null;
         return accountId.longValue();
     }
 
     public Long getCategoryId() {
+        if (categoryId == null) return null;
         return categoryId.longValue();
     }
 }

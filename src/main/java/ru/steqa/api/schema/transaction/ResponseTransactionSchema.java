@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import ru.steqa.api.model.TransactionType;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class ResponseTransactionSchema {
@@ -12,13 +12,13 @@ public class ResponseTransactionSchema {
     private TransactionType type;
     private Long amount;
     private String description;
-    private Date date;
+    private LocalDate date;
     private Long accountId;
     private Long categoryId;
 
     @Builder
-    public ResponseTransactionSchema(Long id, TransactionType type, Long amount,
-                                     String description, Date date, Long accountId, Long categoryId) {
+    public ResponseTransactionSchema(Long id, TransactionType type, Long amount, String description,
+                                     LocalDate date, Long accountId, Long categoryId) {
         this.id = id;
         this.type = type;
         this.amount = amount;

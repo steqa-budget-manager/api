@@ -7,9 +7,9 @@ import ru.steqa.api.schema.transaction.UpdateTransactionSchema;
 import java.util.List;
 
 public interface ITransactionService {
-    ResponseTransactionSchema addTransaction(AddTransactionSchema transaction);
-    List<ResponseTransactionSchema> getTransactions();
-    ResponseTransactionSchema getTransactionById(Long id);
-    ResponseTransactionSchema updateTransaction(UpdateTransactionSchema transaction, Long id);
-    void deleteTransactionById(Long id);
+    ResponseTransactionSchema addTransaction(Long userId, AddTransactionSchema transaction);
+    List<ResponseTransactionSchema> getTransactions(Long userId);
+    ResponseTransactionSchema getTransactionById(Long userId, Long id);
+    ResponseTransactionSchema updateTransaction(Long userId, Long id, UpdateTransactionSchema transaction);
+    void deleteTransactionById(Long userId, Long id);
 }

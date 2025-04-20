@@ -16,6 +16,7 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
     public ResponseUserScheme getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
@@ -27,6 +28,7 @@ public class UserService implements IUserService {
                 .build();
     }
 
+    @Override
     public ResponseUserScheme addUser(AddUserScheme request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserEmailExistsException();

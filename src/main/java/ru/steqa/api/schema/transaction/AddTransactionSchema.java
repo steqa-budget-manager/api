@@ -35,11 +35,6 @@ public class AddTransactionSchema {
     @NotNull
     @Min(0)
     @Max(Long.MAX_VALUE)
-    private BigInteger userId;
-
-    @NotNull
-    @Min(0)
-    @Max(Long.MAX_VALUE)
     private BigInteger accountId;
 
     @NotNull
@@ -57,10 +52,6 @@ public class AddTransactionSchema {
 
     public LocalDate getDate() {
         return LocalDate.parse(date);
-    }
-
-    public Long getUserId() {
-        return userId.longValue();
     }
 
     public Long getAccountId() {
