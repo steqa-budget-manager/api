@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface ITransactionRepository extends JpaRepository<Transaction, Long> {
     List<Transaction> findAllByUserId(Long userId);
     List<Transaction> findAllByUserIdAndAccountId(Long userId, Long id);
+    List<Transaction> findAllByUserIdAndCategoryId(Long userId, Long id);
     Optional<Transaction> findByUserIdAndId(Long userId, Long id);
 }

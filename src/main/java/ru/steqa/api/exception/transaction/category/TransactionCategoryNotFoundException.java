@@ -5,6 +5,6 @@ import ru.steqa.api.exception.HttpException;
 
 public class TransactionCategoryNotFoundException extends HttpException {
     public TransactionCategoryNotFoundException() {
-        super(HttpStatus.NOT_FOUND, "Transaction category not found");
+        super(HttpStatus.NOT_FOUND, "Category not found");
     }
 }

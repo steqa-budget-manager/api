@@ -80,7 +80,7 @@ public class JwtTokenUtility {
         if (!Objects.equals(type, tokenType)) throw new TokenTypeInvalidException(type, tokenType);
 
         String email = getSubjectFromToken(token);
-        User user = userRepository.findByEmail(email).orElseThrow(TokenInvalidException::new);;
+        User user = userRepository.findByEmail(email).orElseThrow(TokenInvalidException::new);
 
         return user;
     }
