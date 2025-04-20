@@ -23,6 +23,13 @@ public class TransactionCategory {
     @Column(nullable = false)
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "user_id", nullable = false, insertable = false, updatable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "category")
     private List<Transaction> transactions;
 
