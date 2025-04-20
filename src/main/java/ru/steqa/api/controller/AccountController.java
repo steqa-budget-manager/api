@@ -1,5 +1,6 @@
 package ru.steqa.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class AccountController {
     private final AuthenticationUtility authUtility;
 
     @PostMapping
+    @Operation(summary = "Add account")
     public ResponseEntity<ResponseAccountScheme> addAccount(@RequestBody @Valid AddAccountScheme request) {
         User user = authUtility.getCurrentUser();
         ResponseAccountScheme account = accountService.addAccount(user.getId(), request);
@@ -34,18 +36,21 @@ public class AccountController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all accounts")
     public ResponseEntity<List<ResponseAccountScheme>> getAllAccounts() {
         User user = authUtility.getCurrentUser();
         return ResponseEntity.ok(accountService.getAccounts(user.getId()));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get account by id")
     public ResponseEntity<ResponseAccountScheme> getAccountById(@PathVariable Long id) {
         User user = authUtility.getCurrentUser();
         return ResponseEntity.ok(accountService.getAccountById(user.getId(), id));
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Update account")
     public ResponseEntity<ResponseAccountScheme> updateAccount(
             @PathVariable Long id,
             @RequestBody @Valid UpdateAccountScheme request
@@ -56,7 +61,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    @Description("")
+    @Operation(summary = "Delete account")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         User user = authUtility.getCurrentUser();
         accountService.deleteAccountById(user.getId(), id);

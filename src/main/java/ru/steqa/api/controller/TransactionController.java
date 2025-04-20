@@ -1,5 +1,6 @@
 package ru.steqa.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class TransactionController {
     private final AuthenticationUtility authUtility;
 
     @PostMapping
+    @Operation(summary = "Add transaction")
     public ResponseEntity<ResponseTransactionScheme> addTransaction(@RequestBody @Valid AddTransactionScheme request) {
         User user = authUtility.getCurrentUser();
         ResponseTransactionScheme transaction = transactionService.addTransaction(user.getId(), request);
@@ -33,18 +35,21 @@ public class TransactionController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all transactions")
     public ResponseEntity<List<ResponseTransactionScheme>> getAllTransactions() {
         User user = authUtility.getCurrentUser();
         return ResponseEntity.ok(transactionService.getTransactions(user.getId()));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get transaction by id")
     public ResponseEntity<ResponseTransactionScheme> getTransactionById(@PathVariable Long id) {
         User user = authUtility.getCurrentUser();
         return ResponseEntity.ok(transactionService.getTransactionById(user.getId(), id));
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Update transaction")
     public ResponseEntity<ResponseTransactionScheme> updateTransaction(
             @PathVariable Long id,
             @RequestBody @Valid UpdateTransactionScheme request
@@ -55,6 +60,7 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete transaction")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
         User user = authUtility.getCurrentUser();
         transactionService.deleteTransactionById(user.getId(), id);

@@ -27,6 +27,7 @@ api:
 springdoc:
     swagger-ui:
         path: /api/v1/swagger-ui
+        operations-sorter: method
     api-docs:
         path: /api/v1/doc
 

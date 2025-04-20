@@ -1,5 +1,6 @@
 package ru.steqa.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,6 +30,7 @@ public class AuthController {
     private final AuthenticationUtility authenticationUtility;
 
     @PostMapping("/signup")
+    @Operation(summary = "Signup")
     public ResponseJwtScheme signup(@RequestBody @Valid AddUserScheme request) {
         ResponseUserScheme user = userService.addUser(request);
         String accessToken = jwtTokenUtility.createAccessToken(user.getEmail());
@@ -37,6 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login")
     public ResponseJwtScheme login(@RequestBody @Valid LoginScheme request) {
         authenticationUtility.login(request);
         String accessToken = jwtTokenUtility.createAccessToken(request.getEmail());
@@ -45,6 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
+    @Operation(summary = "Refresh access and refresh tokens")
     public ResponseJwtScheme refresh(@RequestBody @Valid RefreshScheme request) {
         User user = jwtTokenUtility.validateRefreshToken(request.getRefresh());
         String accessToken = jwtTokenUtility.createAccessToken(user.getEmail());
