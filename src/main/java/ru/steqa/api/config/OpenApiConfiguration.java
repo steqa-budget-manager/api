@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @OpenAPIDefinition(
@@ -16,10 +17,15 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
                         email = "i.stepan.work@gmail.com"
                 ),
                 version = "1.0.0"
-        )
+        ),
+        security = {
+                @SecurityRequirement(
+                        name = "bearerAuth"
+                )
+        }
 )
 @SecurityScheme(
-        name = "Bearer Authentication",
+        name = "bearerAuth",
         scheme = "bearer",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
