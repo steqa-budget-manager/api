@@ -14,9 +14,9 @@ import ru.steqa.api.repository.IAccountRepository;
 import ru.steqa.api.repository.ITransactionCategoryRepository;
 import ru.steqa.api.repository.ITransactionRepository;
 import ru.steqa.api.repository.IUserRepository;
-import ru.steqa.api.schema.transaction.AddTransactionSchema;
-import ru.steqa.api.schema.transaction.ResponseTransactionSchema;
-import ru.steqa.api.schema.transaction.UpdateTransactionSchema;
+import ru.steqa.api.scheme.transaction.AddTransactionScheme;
+import ru.steqa.api.scheme.transaction.ResponseTransactionScheme;
+import ru.steqa.api.scheme.transaction.UpdateTransactionScheme;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class TransactionService implements ITransactionService {
     private final ITransactionCategoryRepository transactionCategoryRepository;
 
     @Override
-    public ResponseTransactionSchema addTransaction(Long userId, AddTransactionSchema request) {
+    public ResponseTransactionScheme addTransaction(Long userId, AddTransactionScheme request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -49,7 +49,7 @@ public class TransactionService implements ITransactionService {
                 .category(category)
                 .build();
         Transaction transaction = transactionRepository.save(transactionToAdd);
-        return ResponseTransactionSchema.builder()
+        return ResponseTransactionScheme.builder()
                 .id(transaction.getId())
                 .type(transaction.getType())
                 .amount(transaction.getAmount())
@@ -61,10 +61,10 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public List<ResponseTransactionSchema> getTransactions(Long userId) {
+    public List<ResponseTransactionScheme> getTransactions(Long userId) {
         return transactionRepository.findAllByUserId(userId)
                 .stream()
-                .map(transaction -> ResponseTransactionSchema.builder()
+                .map(transaction -> ResponseTransactionScheme.builder()
                         .id(transaction.getId())
                         .type(transaction.getType())
                         .amount(transaction.getAmount())
@@ -78,10 +78,10 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public ResponseTransactionSchema getTransactionById(Long userId, Long id) {
+    public ResponseTransactionScheme getTransactionById(Long userId, Long id) {
         Transaction transaction = transactionRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionNotFoundException::new);
-        return ResponseTransactionSchema.builder()
+        return ResponseTransactionScheme.builder()
                 .id(transaction.getId())
                 .type(transaction.getType())
                 .amount(transaction.getAmount())
@@ -93,7 +93,7 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public ResponseTransactionSchema updateTransaction(Long userId, Long id, UpdateTransactionSchema request) {
+    public ResponseTransactionScheme updateTransaction(Long userId, Long id, UpdateTransactionScheme request) {
         Transaction transactionToUpdate = transactionRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionNotFoundException::new);
 
@@ -118,7 +118,7 @@ public class TransactionService implements ITransactionService {
         if (request.getType() != null) transactionToUpdate.setType(request.getType());
 
         Transaction transaction = transactionRepository.save(transactionToUpdate);
-        return ResponseTransactionSchema.builder()
+        return ResponseTransactionScheme.builder()
                 .id(transaction.getId())
                 .type(transaction.getType())
                 .amount(transaction.getAmount())

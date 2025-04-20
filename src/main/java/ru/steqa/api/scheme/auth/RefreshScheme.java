@@ -1,4 +1,4 @@
-package ru.steqa.api.schema.auth;
+package ru.steqa.api.scheme.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

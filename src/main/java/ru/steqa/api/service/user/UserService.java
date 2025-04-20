@@ -7,8 +7,8 @@ import ru.steqa.api.exception.user.UserEmailExistsException;
 import ru.steqa.api.exception.user.UserNotFoundException;
 import ru.steqa.api.model.User;
 import ru.steqa.api.repository.IUserRepository;
-import ru.steqa.api.schema.user.AddUserScheme;
-import ru.steqa.api.schema.user.ResponseUserScheme;
+import ru.steqa.api.scheme.user.AddUserScheme;
+import ru.steqa.api.scheme.user.ResponseUserScheme;
 
 @Service
 @RequiredArgsConstructor

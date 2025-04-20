@@ -1,4 +1,4 @@
-package ru.steqa.api.schema.user;
+package ru.steqa.api.scheme.user;
 
 import lombok.Builder;
 import lombok.Data;

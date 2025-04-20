@@ -1,4 +1,4 @@
-package ru.steqa.api.schema.validators;
+package ru.steqa.api.scheme.validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

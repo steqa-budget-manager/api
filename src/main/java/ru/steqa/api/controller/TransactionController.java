@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.steqa.api.model.User;
-import ru.steqa.api.schema.transaction.AddTransactionSchema;
-import ru.steqa.api.schema.transaction.ResponseTransactionSchema;
-import ru.steqa.api.schema.transaction.UpdateTransactionSchema;
+import ru.steqa.api.scheme.transaction.AddTransactionScheme;
+import ru.steqa.api.scheme.transaction.ResponseTransactionScheme;
+import ru.steqa.api.scheme.transaction.UpdateTransactionScheme;
 import ru.steqa.api.service.transaction.ITransactionService;
 import ru.steqa.api.utility.AuthenticationUtility;
 
@@ -25,32 +25,32 @@ public class TransactionController {
     private final AuthenticationUtility authUtility;
 
     @PostMapping
-    public ResponseEntity<ResponseTransactionSchema> addTransaction(@RequestBody @Valid AddTransactionSchema request) {
+    public ResponseEntity<ResponseTransactionScheme> addTransaction(@RequestBody @Valid AddTransactionScheme request) {
         User user = authUtility.getCurrentUser();
-        ResponseTransactionSchema transaction = transactionService.addTransaction(user.getId(), request);
+        ResponseTransactionScheme transaction = transactionService.addTransaction(user.getId(), request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(transaction.getId()).toUri();
         return ResponseEntity.created(location).body(transaction);
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseTransactionSchema>> getAllTransactions() {
+    public ResponseEntity<List<ResponseTransactionScheme>> getAllTransactions() {
         User user = authUtility.getCurrentUser();
         return ResponseEntity.ok(transactionService.getTransactions(user.getId()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseTransactionSchema> getTransactionById(@PathVariable Long id) {
+    public ResponseEntity<ResponseTransactionScheme> getTransactionById(@PathVariable Long id) {
         User user = authUtility.getCurrentUser();
         return ResponseEntity.ok(transactionService.getTransactionById(user.getId(), id));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ResponseTransactionSchema> updateTransaction(
+    public ResponseEntity<ResponseTransactionScheme> updateTransaction(
             @PathVariable Long id,
-            @RequestBody @Valid UpdateTransactionSchema request
+            @RequestBody @Valid UpdateTransactionScheme request
     ) {
         User user = authUtility.getCurrentUser();
-        ResponseTransactionSchema transaction = transactionService.updateTransaction(user.getId(), id, request);
+        ResponseTransactionScheme transaction = transactionService.updateTransaction(user.getId(), id, request);
         return ResponseEntity.ok(transaction);
     }
 

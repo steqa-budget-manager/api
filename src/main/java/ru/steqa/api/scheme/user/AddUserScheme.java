@@ -1,4 +1,4 @@
-package ru.steqa.api.schema.user;
+package ru.steqa.api.scheme.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

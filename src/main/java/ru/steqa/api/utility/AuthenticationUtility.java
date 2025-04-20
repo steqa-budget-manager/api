@@ -6,8 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import ru.steqa.api.exception.user.AuthenticationFailedException;
 import ru.steqa.api.model.User;
-import ru.steqa.api.schema.auth.LoginScheme;
-import ru.steqa.api.schema.user.ResponseUserScheme;
+import ru.steqa.api.scheme.auth.LoginScheme;
+import ru.steqa.api.scheme.user.ResponseUserScheme;
 import ru.steqa.api.service.user.IUserService;
 
 @Component
