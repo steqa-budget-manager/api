@@ -49,7 +49,7 @@ public class HttpExceptionHandler {
     public ResponseEntity<HttpExceptionResponse> handleJsonParseException(HttpMessageNotReadableException ex, WebRequest request) {
         HttpExceptionResponse errorResponse = new HttpExceptionResponse(
                 HttpStatus.BAD_REQUEST,
-                "Invalid JSON: " + ex.getMostSpecificCause().getMessage(),
+                "Bad request",
                 request.getDescription(false).replaceFirst("uri=", "")
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
