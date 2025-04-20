@@ -36,5 +36,5 @@ public class TransactionCategory {
     @Column(nullable = false)
     @ColumnDefault("false")
     @JsonIgnore
-    private Boolean deleted = false;
+    private Boolean visible = false;
 }

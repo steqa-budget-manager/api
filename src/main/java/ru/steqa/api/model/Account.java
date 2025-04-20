@@ -2,10 +2,7 @@ package ru.steqa.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Getter
@@ -29,7 +26,15 @@ public class Account {
     private Long userId;
 
     @Column(nullable = false)
-    @ColumnDefault("false")
+    @ColumnDefault("true")
     @JsonIgnore
-    private Boolean deleted = false;
+    private Boolean visible = true;
+
+    @Builder
+    public Account(String name, User user) {
+        this.name = name;
+        this.user = user;
+        this.userId = user.getId();
+        this.visible = true;
+    }
 }
