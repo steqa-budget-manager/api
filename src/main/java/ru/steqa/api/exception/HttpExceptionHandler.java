@@ -4,10 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ControllerAdvice
 public class HttpExceptionHandler {
@@ -19,6 +25,24 @@ public class HttpExceptionHandler {
                 request.getDescription(false).replaceFirst("uri=", "")
         );
         return new ResponseEntity<>(errorResponse, ex.getStatus());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<HttpValidationExceptionResponse> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
+        Map<String, List<String>> fieldErrors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            String field = error.getField();
+            fieldErrors.computeIfAbsent(field, k -> new ArrayList<>()).add(error.getDefaultMessage());
+        });
+
+        HttpValidationExceptionResponse response = new HttpValidationExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed",
+                request.getDescription(false).replace("uri=", ""),
+                fieldErrors
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
