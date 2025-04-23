@@ -1,0 +1,124 @@
+package ru.steqa.api.service.transfer;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.steqa.api.exception.account.AccountNotFoundException;
+import ru.steqa.api.exception.transfer.TransferNotFoundException;
+import ru.steqa.api.exception.user.UserNotFoundException;
+import ru.steqa.api.model.*;
+import ru.steqa.api.repository.*;
+import ru.steqa.api.scheme.transfer.AddTransferScheme;
+import ru.steqa.api.scheme.transfer.ResponseTransferScheme;
+import ru.steqa.api.scheme.transfer.UpdateTransferScheme;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class TransferService implements ITransferService {
+    private final ITransferRepository transferRepository;
+    private final IUserRepository userRepository;
+    private final IAccountRepository accountRepository;
+
+    @Override
+    public ResponseTransferScheme addTransfer(Long userId, AddTransferScheme request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        Account fromAccount = accountRepository.findByUserIdAndId(userId, request.getFromAccountId())
+                .orElseThrow(AccountNotFoundException::new);
+
+        Account toAccount = accountRepository.findByUserIdAndId(userId, request.getToAccountId())
+                .orElseThrow(AccountNotFoundException::new);
+
+        Transfer transferToAdd = Transfer.builder()
+                .amount(request.getAmount())
+                .description(request.getDescription())
+                .date(request.getDate())
+                .user(user)
+                .fromAccount(fromAccount)
+                .toAccount(toAccount)
+                .build();
+        Transfer transfer = transferRepository.save(transferToAdd);
+        return ResponseTransferScheme.builder()
+                .id(transfer.getId())
+                .amount(transfer.getAmount())
+                .description(transfer.getDescription())
+                .date(transfer.getDate())
+                .fromAccountId(transfer.getFromAccountId())
+                .toAccountId(transfer.getToAccountId())
+                .build();
+    }
+
+    @Override
+    public List<ResponseTransferScheme> getTransfers(Long userId) {
+        return transferRepository.findAllByUserId(userId)
+                .stream()
+                .map(transfer -> ResponseTransferScheme.builder()
+                        .id(transfer.getId())
+                        .amount(transfer.getAmount())
+                        .description(transfer.getDescription())
+                        .date(transfer.getDate())
+                        .toAccountId(transfer.getToAccountId())
+                        .fromAccountId(transfer.getFromAccountId())
+                        .build()
+                )
+                .toList();
+    }
+
+    @Override
+    public ResponseTransferScheme getTransferById(Long userId, Long id) {
+        Transfer transfer = transferRepository.findByUserIdAndId(userId, id)
+                .orElseThrow(TransferNotFoundException::new);
+        return ResponseTransferScheme.builder()
+                .id(transfer.getId())
+                .amount(transfer.getAmount())
+                .description(transfer.getDescription())
+                .date(transfer.getDate())
+                .fromAccountId(transfer.getFromAccountId())
+                .toAccountId(transfer.getToAccountId())
+                .build();
+    }
+
+    @Override
+    public ResponseTransferScheme updateTransfer(Long userId, Long id, UpdateTransferScheme request) {
+        Transfer transferToUpdate = transferRepository.findByUserIdAndId(userId, id)
+                .orElseThrow(TransferNotFoundException::new);
+
+        if (request.getFromAccountId() != null) {
+            Account fromAccount = accountRepository.findByUserIdAndId(userId, request.getFromAccountId())
+                    .orElseThrow(AccountNotFoundException::new);
+            transferToUpdate.setFromAccount(fromAccount);
+            transferToUpdate.setFromAccountId(fromAccount.getId());
+        }
+
+        if (request.getToAccountId() != null) {
+            Account toAccount = accountRepository.findByUserIdAndId(userId, request.getToAccountId())
+                    .orElseThrow(AccountNotFoundException::new);
+            transferToUpdate.setFromAccount(toAccount);
+            transferToUpdate.setFromAccountId(toAccount.getId());
+        }
+
+        if (request.getAmount() != null) transferToUpdate.setAmount(request.getAmount());
+        if (request.getDescription() != null) transferToUpdate.setDescription(request.getDescription());
+        if (request.getDate() != null) transferToUpdate.setDate(request.getDate());
+
+        Transfer transfer = transferRepository.save(transferToUpdate);
+        return ResponseTransferScheme.builder()
+                .id(transfer.getId())
+                .amount(transfer.getAmount())
+                .description(transfer.getDescription())
+                .date(transfer.getDate())
+                .fromAccountId(transfer.getFromAccountId())
+                .toAccountId(transfer.getToAccountId())
+                .build();
+    }
+
+    @Override
+    public void deleteTransferById(Long userId, Long id) {
+        transferRepository.findByUserIdAndId(userId, id)
+                .ifPresentOrElse(transferRepository::delete, () -> {
+                    throw new TransferNotFoundException();
+                });
+    }
+}

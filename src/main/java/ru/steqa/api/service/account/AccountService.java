@@ -3,13 +3,16 @@ package ru.steqa.api.service.account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountHasTransactionsException;
+import ru.steqa.api.exception.account.AccountHasTransfersException;
 import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.user.UserNotFoundException;
 import ru.steqa.api.model.Account;
 import ru.steqa.api.model.Transaction;
+import ru.steqa.api.model.Transfer;
 import ru.steqa.api.model.User;
 import ru.steqa.api.repository.IAccountRepository;
 import ru.steqa.api.repository.ITransactionRepository;
+import ru.steqa.api.repository.ITransferRepository;
 import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.account.AddAccountScheme;
 import ru.steqa.api.scheme.account.ResponseAccountScheme;
@@ -23,6 +26,7 @@ public class AccountService implements IAccountService {
     private final IAccountRepository accountRepository;
     private final IUserRepository userRepository;
     private final ITransactionRepository transactionRepository;
+    private final ITransferRepository transferRepository;
 
     @Override
     public ResponseAccountScheme addAccount(Long userId, AddAccountScheme request) {
@@ -88,6 +92,9 @@ public class AccountService implements IAccountService {
 
         List<Transaction> transactions = transactionRepository.findAllByUserIdAndAccountId(userId, account.getId());
         if (!transactions.isEmpty()) throw new AccountHasTransactionsException();
+
+        List<Transfer> transfers = transferRepository.findAllByUserIdAndFromAccountIdOrUserIdAndToAccountId(userId, account.getId(), userId, account.getId());
+        if (!transfers.isEmpty()) throw new AccountHasTransfersException();
 
         accountRepository.delete(account);
     }

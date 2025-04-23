@@ -28,7 +28,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
                 @Tag(name = "Authentication"),
                 @Tag(name = "Account"),
                 @Tag(name = "Category"),
-                @Tag(name = "Transaction")
+                @Tag(name = "Transaction"),
+                @Tag(name = "Transfer")
         }
 )
 @SecurityScheme(
