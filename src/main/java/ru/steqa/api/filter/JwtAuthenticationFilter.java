@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.steqa.api.config.properties.SecurityProperties;
 import ru.steqa.api.exception.HttpException;
 import ru.steqa.api.exception.HttpExceptionResponse;
-import ru.steqa.api.model.User;
 import ru.steqa.api.utility.JwtTokenUtility;
 
 import java.io.IOException;
@@ -42,8 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     {
         try {
             String token = getJwtFromRequest(request);
-            User user = jwtTokenUtility.validateAccessToken(token);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            jwtTokenUtility.validateAccessToken(token);
+            Long userId = jwtTokenUtility.getUserIdFromToken(token);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } catch (HttpException e) {

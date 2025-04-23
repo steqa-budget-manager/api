@@ -4,11 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Description;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.steqa.api.model.User;
 import ru.steqa.api.scheme.account.AddAccountScheme;
 import ru.steqa.api.scheme.account.ResponseAccountScheme;
 import ru.steqa.api.scheme.account.UpdateAccountScheme;
@@ -29,8 +27,8 @@ public class AccountController {
     @PostMapping
     @Operation(summary = "Add account")
     public ResponseEntity<ResponseAccountScheme> addAccount(@RequestBody @Valid AddAccountScheme request) {
-        User user = authUtility.getCurrentUser();
-        ResponseAccountScheme account = accountService.addAccount(user.getId(), request);
+        Long userId = authUtility.getCurrentUserId();
+        ResponseAccountScheme account = accountService.addAccount(userId, request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(account.getId()).toUri();
         return ResponseEntity.created(location).body(account);
     }
@@ -38,15 +36,15 @@ public class AccountController {
     @GetMapping
     @Operation(summary = "Get all accounts")
     public ResponseEntity<List<ResponseAccountScheme>> getAllAccounts() {
-        User user = authUtility.getCurrentUser();
-        return ResponseEntity.ok(accountService.getAccounts(user.getId()));
+        Long userId = authUtility.getCurrentUserId();
+        return ResponseEntity.ok(accountService.getAccounts(userId));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get account by id")
     public ResponseEntity<ResponseAccountScheme> getAccountById(@PathVariable Long id) {
-        User user = authUtility.getCurrentUser();
-        return ResponseEntity.ok(accountService.getAccountById(user.getId(), id));
+        Long userId = authUtility.getCurrentUserId();
+        return ResponseEntity.ok(accountService.getAccountById(userId, id));
     }
 
     @PatchMapping("/{id}")
@@ -55,16 +53,16 @@ public class AccountController {
             @PathVariable Long id,
             @RequestBody @Valid UpdateAccountScheme request
     ) {
-        User user = authUtility.getCurrentUser();
-        ResponseAccountScheme account = accountService.updateAccount(user.getId(), id, request);
+        Long userId = authUtility.getCurrentUserId();
+        ResponseAccountScheme account = accountService.updateAccount(userId, id, request);
         return ResponseEntity.ok(account);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete account")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
-        User user = authUtility.getCurrentUser();
-        accountService.deleteAccountById(user.getId(), id);
+        Long userId = authUtility.getCurrentUserId();
+        accountService.deleteAccountById(userId, id);
         return ResponseEntity.noContent().build();
     }
 }

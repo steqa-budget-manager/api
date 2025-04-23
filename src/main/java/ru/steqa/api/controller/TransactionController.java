@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.steqa.api.model.User;
 import ru.steqa.api.scheme.transaction.AddTransactionScheme;
 import ru.steqa.api.scheme.transaction.ResponseTransactionScheme;
 import ru.steqa.api.scheme.transaction.UpdateTransactionScheme;
@@ -28,8 +27,8 @@ public class TransactionController {
     @PostMapping
     @Operation(summary = "Add transaction")
     public ResponseEntity<ResponseTransactionScheme> addTransaction(@RequestBody @Valid AddTransactionScheme request) {
-        User user = authUtility.getCurrentUser();
-        ResponseTransactionScheme transaction = transactionService.addTransaction(user.getId(), request);
+        Long userId = authUtility.getCurrentUserId();
+        ResponseTransactionScheme transaction = transactionService.addTransaction(userId, request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(transaction.getId()).toUri();
         return ResponseEntity.created(location).body(transaction);
     }
@@ -37,15 +36,15 @@ public class TransactionController {
     @GetMapping
     @Operation(summary = "Get all transactions")
     public ResponseEntity<List<ResponseTransactionScheme>> getAllTransactions() {
-        User user = authUtility.getCurrentUser();
-        return ResponseEntity.ok(transactionService.getTransactions(user.getId()));
+        Long userId = authUtility.getCurrentUserId();
+        return ResponseEntity.ok(transactionService.getTransactions(userId));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get transaction by id")
     public ResponseEntity<ResponseTransactionScheme> getTransactionById(@PathVariable Long id) {
-        User user = authUtility.getCurrentUser();
-        return ResponseEntity.ok(transactionService.getTransactionById(user.getId(), id));
+        Long userId = authUtility.getCurrentUserId();
+        return ResponseEntity.ok(transactionService.getTransactionById(userId, id));
     }
 
     @PatchMapping("/{id}")
@@ -54,16 +53,16 @@ public class TransactionController {
             @PathVariable Long id,
             @RequestBody @Valid UpdateTransactionScheme request
     ) {
-        User user = authUtility.getCurrentUser();
-        ResponseTransactionScheme transaction = transactionService.updateTransaction(user.getId(), id, request);
+        Long userId = authUtility.getCurrentUserId();
+        ResponseTransactionScheme transaction = transactionService.updateTransaction(userId, id, request);
         return ResponseEntity.ok(transaction);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete transaction")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        User user = authUtility.getCurrentUser();
-        transactionService.deleteTransactionById(user.getId(), id);
+        Long userId = authUtility.getCurrentUserId();
+        transactionService.deleteTransactionById(userId, id);
         return ResponseEntity.noContent().build();
     }
 }

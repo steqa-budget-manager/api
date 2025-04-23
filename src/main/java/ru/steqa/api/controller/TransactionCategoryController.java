@@ -4,11 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Description;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.steqa.api.model.User;
 import ru.steqa.api.scheme.transaction.category.AddTransactionCategoryScheme;
 import ru.steqa.api.scheme.transaction.category.ResponseTransactionCategoryScheme;
 import ru.steqa.api.scheme.transaction.category.UpdateTransactionCategoryScheme;
@@ -29,8 +27,8 @@ public class TransactionCategoryController {
     @PostMapping
     @Operation(summary = "Add category")
     public ResponseEntity<ResponseTransactionCategoryScheme> addTransactionCategory(@RequestBody @Valid AddTransactionCategoryScheme request) {
-        User user = authUtility.getCurrentUser();
-        ResponseTransactionCategoryScheme transactionCategory = transactionCategoryService.addTransactionCategory(user.getId(), request);
+        Long userId = authUtility.getCurrentUserId();
+        ResponseTransactionCategoryScheme transactionCategory = transactionCategoryService.addTransactionCategory(userId, request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(transactionCategory.getId()).toUri();
         return ResponseEntity.created(location).body(transactionCategory);
     }
@@ -38,15 +36,15 @@ public class TransactionCategoryController {
     @GetMapping
     @Operation(summary = "Get all categories")
     public ResponseEntity<List<ResponseTransactionCategoryScheme>> getAllTransactionCategories() {
-        User user = authUtility.getCurrentUser();
-        return ResponseEntity.ok(transactionCategoryService.getTransactionCategories(user.getId()));
+        Long userId = authUtility.getCurrentUserId();
+        return ResponseEntity.ok(transactionCategoryService.getTransactionCategories(userId));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get category by id")
     public ResponseEntity<ResponseTransactionCategoryScheme> getTransactionCategoryById(@PathVariable Long id) {
-        User user = authUtility.getCurrentUser();
-        return ResponseEntity.ok(transactionCategoryService.getTransactionCategoryById(user.getId(), id));
+        Long userId = authUtility.getCurrentUserId();
+        return ResponseEntity.ok(transactionCategoryService.getTransactionCategoryById(userId, id));
     }
 
     @PatchMapping("/{id}")
@@ -55,16 +53,16 @@ public class TransactionCategoryController {
             @PathVariable Long id,
             @RequestBody @Valid UpdateTransactionCategoryScheme request
     ) {
-        User user = authUtility.getCurrentUser();
-        ResponseTransactionCategoryScheme transactionCategory = transactionCategoryService.updateTransactionCategory(user.getId(), id, request);
+        Long userId = authUtility.getCurrentUserId();
+        ResponseTransactionCategoryScheme transactionCategory = transactionCategoryService.updateTransactionCategory(userId, id, request);
         return ResponseEntity.ok(transactionCategory);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete category")
     public ResponseEntity<Void> deleteTransactionCategory(@PathVariable Long id) {
-        User user = authUtility.getCurrentUser();
-        transactionCategoryService.deleteTransactionCategoryById(user.getId(), id);
+        Long userId = authUtility.getCurrentUserId();
+        transactionCategoryService.deleteTransactionCategoryById(userId, id);
         return ResponseEntity.noContent().build();
     }
 }
