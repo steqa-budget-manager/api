@@ -13,6 +13,6 @@ public class LoginScheme {
     private String email;
 
     @NotNull
-    @Size(min = 6, max = 255)
+    @Size(min = 5, max = 255)
     private String password;
 }

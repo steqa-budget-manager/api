@@ -17,9 +17,9 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.prefix}/categories")
+@RequestMapping("${api.prefix}/transactions/categories")
 @RequiredArgsConstructor
-@Tag(name = "Category")
+@Tag(name = "Transaction Category")
 public class TransactionCategoryController {
     private final ITransactionCategoryService transactionCategoryService;
     private final AuthenticationUtility authUtility;

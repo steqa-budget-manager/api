@@ -27,8 +27,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
         tags = {
                 @Tag(name = "Authentication"),
                 @Tag(name = "Account"),
-                @Tag(name = "Category"),
+                @Tag(name = "Transaction Category"),
                 @Tag(name = "Transaction"),
+                @Tag(name = "Transaction Template"),
                 @Tag(name = "Transfer")
         }
 )
