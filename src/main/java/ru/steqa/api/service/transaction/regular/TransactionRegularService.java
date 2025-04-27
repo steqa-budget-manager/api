@@ -3,7 +3,9 @@ package ru.steqa.api.service.transaction.regular;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
+import ru.steqa.api.exception.transaction.TransactionNotFoundException;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryNotFoundException;
+import ru.steqa.api.exception.transaction.regular.DeleteTransactionRegularException;
 import ru.steqa.api.exception.user.UserNotFoundException;
 import ru.steqa.api.model.*;
 import ru.steqa.api.repository.*;
@@ -62,5 +64,19 @@ public class TransactionRegularService implements ITransactionRegularService {
     @Override
     public List<ResponseTransactionRegularScheme> getTransactionRegulars(Long userId) {
         return List.of();
+    }
+
+    @Override
+    public void deleteTransactionRegularById(Long userId, Long id) {
+        TransactionRegular transactionRegular = transactionRegularRepository.findByUserIdAndId(userId, id)
+                .orElseThrow(TransactionNotFoundException::new);
+
+        Boolean deleted = regularRuleUtility.deleteRegularRule(transactionRegular.getRepetitionRuleId());
+
+        if (deleted) {
+            transactionRegularRepository.delete(transactionRegular);
+        } else {
+            throw new DeleteTransactionRegularException();
+        }
     }
 }

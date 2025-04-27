@@ -21,7 +21,7 @@ public class GrpcClientService {
                 .setSeconds(interval)
                 .build();
 
-        RepetitionRule repetitionRule = RepetitionRule.newBuilder()
+        AddRuleRequest request = AddRuleRequest.newBuilder()
                 .setMode(Mode.INTERVAL_SECOND)
                 .setTransactionType(Type.DEFAULT)
                 .setTransactionId(transactionId)
@@ -30,7 +30,16 @@ public class GrpcClientService {
                 .setInterval(intervalSchedule)
                 .build();
 
-        AddRuleResponse response = blockingStub.addRule(repetitionRule);
+        RuleIdResponse response = blockingStub.addRule(request);
         return response.getRuleId();
+    }
+
+    public Boolean deleteRepetition(String ruleId) {
+        DeleteRuleRequest request = DeleteRuleRequest.newBuilder()
+                .setRuleId(ruleId)
+                .build();
+
+        StatusResponse response = blockingStub.deleteRule(request);
+        return response.getStatus();
     }
 }

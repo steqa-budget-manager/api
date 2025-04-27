@@ -49,4 +49,8 @@ public class RegularRuleUtility {
         }
         return null;
     }
+
+    public Boolean deleteRegularRule(String regularRuleId) {
+        return grpcClientService.deleteRepetition(regularRuleId);
+    }
 }

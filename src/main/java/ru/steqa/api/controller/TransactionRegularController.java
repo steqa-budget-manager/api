@@ -35,4 +35,11 @@ public class TransactionRegularController {
         return ResponseEntity.ok(transactionRegularService.getTransactionRegulars(userId));
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete transaction regular")
+    public ResponseEntity<Void> deleteTransactionRegular(@PathVariable Long id) {
+        Long userId = authUtility.getCurrentUserId();
+        transactionRegularService.deleteTransactionRegularById(userId, id);
+        return ResponseEntity.noContent().build();
+    }
 }
