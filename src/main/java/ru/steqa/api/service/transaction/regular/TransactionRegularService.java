@@ -37,6 +37,7 @@ public class TransactionRegularService implements ITransactionRegularService {
 
         TransactionRegular transactionRegularToAdd = TransactionRegular.builder()
                 .type(request.getType())
+                .name(request.getName())
                 .amount(request.getAmount())
                 .description(request.getDescription())
                 .user(user)
@@ -53,6 +54,7 @@ public class TransactionRegularService implements ITransactionRegularService {
         return ResponseTransactionRegularScheme.builder()
                 .id(transactionRegular.getId())
                 .type(transactionRegular.getType())
+                .name(transactionRegular.getName())
                 .amount(transactionRegular.getAmount())
                 .description(transactionRegular.getDescription())
                 .rule(request.getRule())

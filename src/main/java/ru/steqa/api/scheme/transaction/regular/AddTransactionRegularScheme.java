@@ -18,6 +18,10 @@ public class AddTransactionRegularScheme {
     private String type;
 
     @NotNull
+    @Length(min = 1, max = 255)
+    private String name;
+
+    @NotNull
     @Min(0)
     @Max(Long.MAX_VALUE)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)

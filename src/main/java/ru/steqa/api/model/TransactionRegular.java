@@ -23,6 +23,9 @@ public class TransactionRegular {
     private TransactionType type;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private Long amount;
 
     private String description;
@@ -52,9 +55,10 @@ public class TransactionRegular {
     private Long categoryId;
 
     @Builder
-    public TransactionRegular(TransactionType type, Long amount, String description, String repetitionRuleId,
+    public TransactionRegular(TransactionType type, String name, Long amount, String description, String repetitionRuleId,
                                User user, Account account, TransactionCategory category) {
         this.type = type;
+        this.name = name;
         this.amount = amount;
         this.description = description;
         this.repetitionRuleId = repetitionRuleId;
