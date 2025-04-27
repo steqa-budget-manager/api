@@ -1,6 +1,17 @@
 server:
     port: 5555
 
+grpc:
+    server:
+        port: 9090
+        security:
+            enabled: false
+    client:
+      service:
+        address: localhost:9595
+        negotiation-type: plaintext
+
+
 spring:
     application:
         name: api

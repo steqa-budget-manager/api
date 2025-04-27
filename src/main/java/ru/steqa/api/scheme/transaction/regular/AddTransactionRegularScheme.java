@@ -1,21 +1,18 @@
-package ru.steqa.api.scheme.transaction;
+package ru.steqa.api.scheme.transaction.regular;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import ru.steqa.api.model.TransactionType;
-import ru.steqa.api.scheme.validators.ValidDate;
 import ru.steqa.api.scheme.validators.ValidEnum;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 
 @Data
-public class AddTransactionScheme {
+public class AddTransactionRegularScheme {
     @NotNull
     @ValidEnum(enumClass = TransactionType.class)
     private String type;
@@ -29,9 +26,7 @@ public class AddTransactionScheme {
     @Length(max = 1000, message = "length must be less than or equal to 1000")
     private String description;
 
-    @NotNull
-    @ValidDate
-    private String date;
+    private AddRuleScheme rule;
 
     @NotNull
     @Min(0)
@@ -51,26 +46,11 @@ public class AddTransactionScheme {
         return amount.longValue();
     }
 
-    public LocalDate getDate() {
-        return LocalDate.parse(date);
-    }
-
     public Long getAccountId() {
         return accountId.longValue();
     }
 
     public Long getCategoryId() {
         return categoryId.longValue();
-    }
-
-    @Builder
-    public AddTransactionScheme(TransactionType type, Long amount, String description,
-                                LocalDate date, Long accountId, Long categoryId) {
-        this.type = type.name();
-        this.amount = BigInteger.valueOf(amount);
-        this.description = description;
-        this.date = date.toString();
-        this.accountId = BigInteger.valueOf(accountId);
-        this.categoryId = BigInteger.valueOf(categoryId);
     }
 }
