@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.steqa.api.scheme.transaction.AddTransactionScheme;
 import ru.steqa.api.scheme.transaction.ResponseTransactionScheme;
+import ru.steqa.api.scheme.transaction.TransactionFilter;
 import ru.steqa.api.scheme.transaction.UpdateTransactionScheme;
 import ru.steqa.api.service.transaction.ITransactionService;
 import ru.steqa.api.utility.AuthenticationUtility;
@@ -35,9 +36,9 @@ public class TransactionController {
 
     @GetMapping
     @Operation(summary = "Get all transactions")
-    public ResponseEntity<List<ResponseTransactionScheme>> getAllTransactions() {
+    public ResponseEntity<List<ResponseTransactionScheme>> getAllTransactions(TransactionFilter filter) {
         Long userId = authUtility.getCurrentUserId();
-        return ResponseEntity.ok(transactionService.getTransactions(userId));
+        return ResponseEntity.ok(transactionService.getTransactions(userId, filter));
     }
 
     @GetMapping("/{id}")

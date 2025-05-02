@@ -1,22 +1,22 @@
 package ru.steqa.api.service.transaction;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.transaction.TransactionNotFoundException;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryNotFoundException;
 import ru.steqa.api.exception.user.UserNotFoundException;
-import ru.steqa.api.model.Account;
-import ru.steqa.api.model.Transaction;
-import ru.steqa.api.model.TransactionCategory;
-import ru.steqa.api.model.User;
+import ru.steqa.api.model.*;
 import ru.steqa.api.repository.IAccountRepository;
 import ru.steqa.api.repository.ITransactionCategoryRepository;
 import ru.steqa.api.repository.ITransactionRepository;
 import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.transaction.AddTransactionScheme;
 import ru.steqa.api.scheme.transaction.ResponseTransactionScheme;
+import ru.steqa.api.scheme.transaction.TransactionFilter;
 import ru.steqa.api.scheme.transaction.UpdateTransactionScheme;
+import ru.steqa.api.specification.TransactionSpecification;
 
 import java.util.List;
 
@@ -48,32 +48,26 @@ public class TransactionService implements ITransactionService {
                 .account(account)
                 .category(category)
                 .build();
+
         Transaction transaction = transactionRepository.save(transactionToAdd);
-        return ResponseTransactionScheme.builder()
-                .id(transaction.getId())
-                .type(transaction.getType())
-                .amount(transaction.getAmount())
-                .description(transaction.getDescription())
-                .date(transaction.getDate())
-                .accountId(transaction.getAccountId())
-                .categoryId(transaction.getCategoryId())
-                .build();
+
+        return toResponseScheme(transaction);
     }
 
     @Override
     public List<ResponseTransactionScheme> getTransactions(Long userId) {
         return transactionRepository.findAllByUserId(userId)
                 .stream()
-                .map(transaction -> ResponseTransactionScheme.builder()
-                        .id(transaction.getId())
-                        .type(transaction.getType())
-                        .amount(transaction.getAmount())
-                        .description(transaction.getDescription())
-                        .date(transaction.getDate())
-                        .accountId(transaction.getAccountId())
-                        .categoryId(transaction.getCategoryId())
-                        .build()
-                )
+                .map(this::toResponseScheme)
+                .toList();
+    }
+
+    @Override
+    public List<ResponseTransactionScheme> getTransactions(Long userId, TransactionFilter filter) {
+        Specification<Transaction> spec = TransactionSpecification.byFilter(userId, filter);
+        return transactionRepository.findAll(spec)
+                .stream()
+                .map(this::toResponseScheme)
                 .toList();
     }
 
@@ -81,15 +75,8 @@ public class TransactionService implements ITransactionService {
     public ResponseTransactionScheme getTransactionById(Long userId, Long id) {
         Transaction transaction = transactionRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionNotFoundException::new);
-        return ResponseTransactionScheme.builder()
-                .id(transaction.getId())
-                .type(transaction.getType())
-                .amount(transaction.getAmount())
-                .description(transaction.getDescription())
-                .date(transaction.getDate())
-                .accountId(transaction.getAccountId())
-                .categoryId(transaction.getCategoryId())
-                .build();
+
+        return toResponseScheme(transaction);
     }
 
     @Override
@@ -118,6 +105,19 @@ public class TransactionService implements ITransactionService {
         if (request.getType() != null) transactionToUpdate.setType(request.getType());
 
         Transaction transaction = transactionRepository.save(transactionToUpdate);
+
+        return toResponseScheme(transaction);
+    }
+
+    @Override
+    public void deleteTransactionById(Long userId, Long id) {
+        transactionRepository.findByUserIdAndId(userId, id)
+                .ifPresentOrElse(transactionRepository::delete, () -> {
+                    throw new TransactionNotFoundException();
+                });
+    }
+
+    private ResponseTransactionScheme toResponseScheme(Transaction transaction) {
         return ResponseTransactionScheme.builder()
                 .id(transaction.getId())
                 .type(transaction.getType())
@@ -127,13 +127,5 @@ public class TransactionService implements ITransactionService {
                 .accountId(transaction.getAccountId())
                 .categoryId(transaction.getCategoryId())
                 .build();
-    }
-
-    @Override
-    public void deleteTransactionById(Long userId, Long id) {
-        transactionRepository.findByUserIdAndId(userId, id)
-                .ifPresentOrElse(transactionRepository::delete, () -> {
-                    throw new TransactionNotFoundException();
-                });
     }
 }
