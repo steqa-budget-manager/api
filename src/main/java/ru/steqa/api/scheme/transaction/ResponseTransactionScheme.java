@@ -13,18 +13,22 @@ public class ResponseTransactionScheme {
     private Long amount;
     private String description;
     private LocalDate date;
+    private String account;
     private Long accountId;
+    private String category;
     private Long categoryId;
 
     @Builder
     public ResponseTransactionScheme(Long id, TransactionType type, Long amount, String description,
-                                     LocalDate date, Long accountId, Long categoryId) {
+                                     LocalDate date, String account, Long accountId, String category, Long categoryId) {
         this.id = id;
         this.type = type;
         this.amount = amount;
         this.description = description;
         this.date = date;
+        this.account = account;
         this.accountId = accountId;
+        this.category = category;
         this.categoryId = categoryId;
     }
 }

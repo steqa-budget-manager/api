@@ -124,7 +124,9 @@ public class TransactionService implements ITransactionService {
                 .amount(transaction.getAmount())
                 .description(transaction.getDescription())
                 .date(transaction.getDate())
+                .account(transaction.getAccount().getName())
                 .accountId(transaction.getAccountId())
+                .category(transaction.getCategory().getName())
                 .categoryId(transaction.getCategoryId())
                 .build();
     }
