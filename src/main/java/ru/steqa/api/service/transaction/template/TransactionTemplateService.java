@@ -41,30 +41,17 @@ public class TransactionTemplateService implements ITransactionTemplateService {
                 .account(account)
                 .category(category)
                 .build();
+
         TransactionTemplate transactionTemplate = transactionTemplateRepository.save(transactionTemplateToAdd);
-        return ResponseTransactionTemplateScheme.builder()
-                .id(transactionTemplate.getId())
-                .type(transactionTemplate.getType())
-                .amount(transactionTemplate.getAmount())
-                .description(transactionTemplate.getDescription())
-                .accountId(transactionTemplate.getAccountId())
-                .categoryId(transactionTemplate.getCategoryId())
-                .build();
+
+        return toResponseScheme(transactionTemplate);
     }
 
     @Override
     public List<ResponseTransactionTemplateScheme> getTransactionTemplates(Long userId) {
         return transactionTemplateRepository.findAllByUserId(userId)
                 .stream()
-                .map(transactionTemplate -> ResponseTransactionTemplateScheme.builder()
-                        .id(transactionTemplate.getId())
-                        .type(transactionTemplate.getType())
-                        .amount(transactionTemplate.getAmount())
-                        .description(transactionTemplate.getDescription())
-                        .accountId(transactionTemplate.getAccountId())
-                        .categoryId(transactionTemplate.getCategoryId())
-                        .build()
-                )
+                .map(this::toResponseScheme)
                 .toList();
     }
 
@@ -72,14 +59,8 @@ public class TransactionTemplateService implements ITransactionTemplateService {
     public ResponseTransactionTemplateScheme getTransactionTemplateById(Long userId, Long id) {
         TransactionTemplate transactionTemplate = transactionTemplateRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionTemplateNotFoundException::new);
-        return ResponseTransactionTemplateScheme.builder()
-                .id(transactionTemplate.getId())
-                .type(transactionTemplate.getType())
-                .amount(transactionTemplate.getAmount())
-                .description(transactionTemplate.getDescription())
-                .accountId(transactionTemplate.getAccountId())
-                .categoryId(transactionTemplate.getCategoryId())
-                .build();
+
+        return toResponseScheme(transactionTemplate);
     }
 
     @Override
@@ -107,14 +88,8 @@ public class TransactionTemplateService implements ITransactionTemplateService {
         if (request.getType() != null) transactionTemplateToUpdate.setType(request.getType());
 
         TransactionTemplate transactionTemplate = transactionTemplateRepository.save(transactionTemplateToUpdate);
-        return ResponseTransactionTemplateScheme.builder()
-                .id(transactionTemplate.getId())
-                .type(transactionTemplate.getType())
-                .amount(transactionTemplate.getAmount())
-                .description(transactionTemplate.getDescription())
-                .accountId(transactionTemplate.getAccountId())
-                .categoryId(transactionTemplate.getCategoryId())
-                .build();
+
+        return toResponseScheme(transactionTemplate);
     }
 
     @Override
@@ -123,5 +98,16 @@ public class TransactionTemplateService implements ITransactionTemplateService {
                 .ifPresentOrElse(transactionTemplateRepository::delete, () -> {
                     throw new TransactionTemplateNotFoundException();
                 });
+    }
+
+    private ResponseTransactionTemplateScheme toResponseScheme(TransactionTemplate transactionTemplate) {
+        return ResponseTransactionTemplateScheme.builder()
+                .id(transactionTemplate.getId())
+                .type(transactionTemplate.getType())
+                .amount(transactionTemplate.getAmount())
+                .description(transactionTemplate.getDescription())
+                .accountId(transactionTemplate.getAccountId())
+                .categoryId(transactionTemplate.getCategoryId())
+                .build();
     }
 }

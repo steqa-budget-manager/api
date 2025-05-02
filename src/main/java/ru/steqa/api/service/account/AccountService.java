@@ -37,24 +37,17 @@ public class AccountService implements IAccountService {
                 .name(request.getName())
                 .user(user)
                 .build();
+
         Account account = accountRepository.save(accountToAdd);
-        return ResponseAccountScheme.builder()
-                .id(account.getId())
-                .name(account.getName())
-                .visible(account.getVisible())
-                .build();
+
+        return toResponseScheme(account);
     }
 
     @Override
     public List<ResponseAccountScheme> getAccounts(Long userId) {
         return accountRepository.findAllByUserId(userId)
                 .stream()
-                .map(account -> ResponseAccountScheme.builder()
-                        .id(account.getId())
-                        .name(account.getName())
-                        .visible(account.getVisible())
-                        .build()
-                )
+                .map(this::toResponseScheme)
                 .toList();
     }
 
@@ -62,11 +55,8 @@ public class AccountService implements IAccountService {
     public ResponseAccountScheme getAccountById(Long userId, Long id) {
         Account account = accountRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(AccountNotFoundException::new);
-        return ResponseAccountScheme.builder()
-                .id(account.getId())
-                .name(account.getName())
-                .visible(account.getVisible())
-                .build();
+
+        return toResponseScheme(account);
     }
 
     @Override
@@ -78,11 +68,8 @@ public class AccountService implements IAccountService {
         if (request.getVisible() != null) accountToUpdate.setVisible(request.getVisible());
 
         Account account = accountRepository.save(accountToUpdate);
-        return ResponseAccountScheme.builder()
-                .id(account.getId())
-                .name(account.getName())
-                .visible(account.getVisible())
-                .build();
+
+        return toResponseScheme(account);
     }
 
     @Override
@@ -97,5 +84,13 @@ public class AccountService implements IAccountService {
         if (!transfers.isEmpty()) throw new AccountHasTransfersException();
 
         accountRepository.delete(account);
+    }
+
+    private ResponseAccountScheme toResponseScheme(Account account) {
+        return ResponseAccountScheme.builder()
+                .id(account.getId())
+                .name(account.getName())
+                .visible(account.getVisible())
+                .build();
     }
 }

@@ -33,24 +33,17 @@ public class TransactionCategoryService implements ITransactionCategoryService {
                 .name(request.getName())
                 .user(user)
                 .build();
+
         TransactionCategory transactionCategory = transactionCategoryRepository.save(transactionCategoryToAdd);
-        return ResponseTransactionCategoryScheme.builder()
-                .id(transactionCategory.getId())
-                .name(transactionCategory.getName())
-                .visible(transactionCategory.getVisible())
-                .build();
+
+        return toResponseScheme(transactionCategory);
     }
 
     @Override
     public List<ResponseTransactionCategoryScheme> getTransactionCategories(Long userId) {
         return transactionCategoryRepository.findAllByUserId(userId)
                 .stream()
-                .map(transactionCategory -> ResponseTransactionCategoryScheme.builder()
-                        .id(transactionCategory.getId())
-                        .name(transactionCategory.getName())
-                        .visible(transactionCategory.getVisible())
-                        .build()
-                )
+                .map(this::toResponseScheme)
                 .toList();
     }
 
@@ -58,11 +51,8 @@ public class TransactionCategoryService implements ITransactionCategoryService {
     public ResponseTransactionCategoryScheme getTransactionCategoryById(Long userId, Long id) {
         TransactionCategory transactionCategory = transactionCategoryRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionCategoryNotFoundException::new);
-        return ResponseTransactionCategoryScheme.builder()
-                .id(transactionCategory.getId())
-                .name(transactionCategory.getName())
-                .visible(transactionCategory.getVisible())
-                .build();
+
+        return toResponseScheme(transactionCategory);
     }
 
     @Override
@@ -74,11 +64,8 @@ public class TransactionCategoryService implements ITransactionCategoryService {
         if (request.getVisible() != null) transactionCategoryToUpdate.setVisible(request.getVisible());
 
         TransactionCategory transactionCategory = transactionCategoryRepository.save(transactionCategoryToUpdate);
-        return ResponseTransactionCategoryScheme.builder()
-                .id(transactionCategory.getId())
-                .name(transactionCategory.getName())
-                .visible(transactionCategory.getVisible())
-                .build();
+
+        return toResponseScheme(transactionCategory);
     }
 
     @Override
@@ -90,5 +77,13 @@ public class TransactionCategoryService implements ITransactionCategoryService {
         if (!transactions.isEmpty()) throw new TransactionCategoryHasTransactionsException();
 
         transactionCategoryRepository.delete(transactionCategory);
+    }
+
+    private ResponseTransactionCategoryScheme toResponseScheme(TransactionCategory transactionCategory) {
+        return ResponseTransactionCategoryScheme.builder()
+                .id(transactionCategory.getId())
+                .name(transactionCategory.getName())
+                .visible(transactionCategory.getVisible())
+                .build();
     }
 }

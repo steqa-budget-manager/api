@@ -20,12 +20,8 @@ public class UserService implements IUserService {
     public ResponseUserScheme getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
-        return ResponseUserScheme.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .createdAt(user.getCreatedAt())
-                .build();
+
+        return toResponseScheme(user);
     }
 
     @Override
@@ -33,11 +29,18 @@ public class UserService implements IUserService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserEmailExistsException();
         }
+
         User userToAdd = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
+
         User user = userRepository.save(userToAdd);
+
+        return toResponseScheme(user);
+    }
+
+    private ResponseUserScheme toResponseScheme(User user) {
         return ResponseUserScheme.builder()
                 .id(user.getId())
                 .email(user.getEmail())

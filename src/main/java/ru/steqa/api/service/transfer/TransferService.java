@@ -39,30 +39,17 @@ public class TransferService implements ITransferService {
                 .fromAccount(fromAccount)
                 .toAccount(toAccount)
                 .build();
+
         Transfer transfer = transferRepository.save(transferToAdd);
-        return ResponseTransferScheme.builder()
-                .id(transfer.getId())
-                .amount(transfer.getAmount())
-                .description(transfer.getDescription())
-                .date(transfer.getDate())
-                .fromAccountId(transfer.getFromAccountId())
-                .toAccountId(transfer.getToAccountId())
-                .build();
+
+        return toResponseScheme(transfer);
     }
 
     @Override
     public List<ResponseTransferScheme> getTransfers(Long userId) {
         return transferRepository.findAllByUserId(userId)
                 .stream()
-                .map(transfer -> ResponseTransferScheme.builder()
-                        .id(transfer.getId())
-                        .amount(transfer.getAmount())
-                        .description(transfer.getDescription())
-                        .date(transfer.getDate())
-                        .toAccountId(transfer.getToAccountId())
-                        .fromAccountId(transfer.getFromAccountId())
-                        .build()
-                )
+                .map(this::toResponseScheme)
                 .toList();
     }
 
@@ -70,14 +57,8 @@ public class TransferService implements ITransferService {
     public ResponseTransferScheme getTransferById(Long userId, Long id) {
         Transfer transfer = transferRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransferNotFoundException::new);
-        return ResponseTransferScheme.builder()
-                .id(transfer.getId())
-                .amount(transfer.getAmount())
-                .description(transfer.getDescription())
-                .date(transfer.getDate())
-                .fromAccountId(transfer.getFromAccountId())
-                .toAccountId(transfer.getToAccountId())
-                .build();
+
+        return toResponseScheme(transfer);
     }
 
     @Override
@@ -104,14 +85,8 @@ public class TransferService implements ITransferService {
         if (request.getDate() != null) transferToUpdate.setDate(request.getDate());
 
         Transfer transfer = transferRepository.save(transferToUpdate);
-        return ResponseTransferScheme.builder()
-                .id(transfer.getId())
-                .amount(transfer.getAmount())
-                .description(transfer.getDescription())
-                .date(transfer.getDate())
-                .fromAccountId(transfer.getFromAccountId())
-                .toAccountId(transfer.getToAccountId())
-                .build();
+
+        return toResponseScheme(transfer);
     }
 
     @Override
@@ -120,5 +95,16 @@ public class TransferService implements ITransferService {
                 .ifPresentOrElse(transferRepository::delete, () -> {
                     throw new TransferNotFoundException();
                 });
+    }
+
+    private ResponseTransferScheme toResponseScheme(Transfer transfer) {
+        return ResponseTransferScheme.builder()
+                .id(transfer.getId())
+                .amount(transfer.getAmount())
+                .description(transfer.getDescription())
+                .date(transfer.getDate())
+                .fromAccountId(transfer.getFromAccountId())
+                .toAccountId(transfer.getToAccountId())
+                .build();
     }
 }
