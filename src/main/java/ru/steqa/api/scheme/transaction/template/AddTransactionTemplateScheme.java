@@ -1,6 +1,5 @@
 package ru.steqa.api.scheme.transaction.template;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -19,9 +18,8 @@ public class AddTransactionTemplateScheme {
 
     @NotNull
     @Min(0)
-    @Max(Long.MAX_VALUE)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    private BigInteger amount;
+    @Max(100000000000000000L)
+    private Long amount;
 
     @Length(max = 1000, message = "length must be less than or equal to 1000")
     private String description;
@@ -38,10 +36,6 @@ public class AddTransactionTemplateScheme {
 
     public TransactionType getType() {
         return TransactionType.valueOf(type);
-    }
-
-    public Long getAmount() {
-        return amount.longValue();
     }
 
     public Long getAccountId() {

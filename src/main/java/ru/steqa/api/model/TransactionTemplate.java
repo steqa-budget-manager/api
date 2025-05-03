@@ -1,6 +1,7 @@
 package ru.steqa.api.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class TransactionTemplate {
     private TransactionType type;
 
     @Column(nullable = false)
+    @Max(100000000000000000L)
     private Long amount;
 
     private String description;

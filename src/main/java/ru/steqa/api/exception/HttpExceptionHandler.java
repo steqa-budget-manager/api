@@ -53,7 +53,6 @@ public class HttpExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<HttpExceptionResponse> handleJsonParseException(HttpMessageNotReadableException ex, WebRequest request) {
         HttpExceptionResponse errorResponse = new HttpExceptionResponse(

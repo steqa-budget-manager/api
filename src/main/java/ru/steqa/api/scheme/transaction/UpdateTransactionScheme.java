@@ -1,6 +1,5 @@
 package ru.steqa.api.scheme.transaction;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
@@ -18,9 +17,8 @@ public class UpdateTransactionScheme {
     private String type;
 
     @Min(0)
-    @Max(Long.MAX_VALUE)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    private BigInteger amount;
+    @Max(100000000000000000L)
+    private Long amount;
 
     @Length(max = 1000, message = "length must be less than or equal to 1000")
     private String description;
@@ -43,7 +41,7 @@ public class UpdateTransactionScheme {
 
     public Long getAmount() {
         if (amount == null) return null;
-        return amount.longValue();
+        return amount;
     }
 
     public LocalDate getDate() {
