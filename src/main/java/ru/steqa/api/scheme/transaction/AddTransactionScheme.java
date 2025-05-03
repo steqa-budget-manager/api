@@ -1,6 +1,8 @@
 package ru.steqa.api.scheme.transaction;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -9,7 +11,7 @@ import ru.steqa.api.scheme.validators.ValidDate;
 import ru.steqa.api.scheme.validators.ValidEnum;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Data
 public class AddTransactionScheme {
@@ -43,8 +45,8 @@ public class AddTransactionScheme {
         return TransactionType.valueOf(type);
     }
 
-    public LocalDate getDate() {
-        return LocalDate.parse(date);
+    public ZonedDateTime getDate() {
+        return ZonedDateTime.parse(date);
     }
 
     public Long getAccountId() {
@@ -57,7 +59,7 @@ public class AddTransactionScheme {
 
     @Builder
     public AddTransactionScheme(TransactionType type, Long amount, String description,
-                                LocalDate date, Long accountId, Long categoryId) {
+                                ZonedDateTime date, Long accountId, Long categoryId) {
         this.type = type.name();
         this.amount = amount;
         this.description = description;

@@ -3,20 +3,20 @@ package ru.steqa.api.scheme.transfer;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class ResponseTransferScheme {
     private Long id;
     private Long amount;
     private String description;
-    private LocalDate date;
+    private LocalDateTime date;
     private Long fromAccountId;
     private Long toAccountId;
 
     @Builder
     public ResponseTransferScheme(Long id, Long amount, String description,
-                                     LocalDate date, Long fromAccountId, Long toAccountId) {
+                                  LocalDateTime date, Long fromAccountId, Long toAccountId) {
         this.id = id;
         this.amount = amount;
         this.description = description;

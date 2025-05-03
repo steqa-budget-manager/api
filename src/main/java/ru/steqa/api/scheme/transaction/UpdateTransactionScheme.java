@@ -9,7 +9,7 @@ import ru.steqa.api.scheme.validators.ValidDate;
 import ru.steqa.api.scheme.validators.ValidEnum;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Data
 public class UpdateTransactionScheme {
@@ -44,9 +44,9 @@ public class UpdateTransactionScheme {
         return amount;
     }
 
-    public LocalDate getDate() {
+    public ZonedDateTime getDate() {
         if (date == null) return null;
-        return LocalDate.parse(date);
+        return ZonedDateTime.parse(date);
     }
 
     public Long getAccountId() {

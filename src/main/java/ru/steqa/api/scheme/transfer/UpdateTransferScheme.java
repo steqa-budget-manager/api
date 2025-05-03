@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import ru.steqa.api.scheme.validators.ValidDate;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class UpdateTransferScheme {
@@ -34,9 +34,9 @@ public class UpdateTransferScheme {
         return amount;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         if (date == null) return null;
-        return LocalDate.parse(date);
+        return LocalDateTime.parse(date);
     }
 
     public Long getFromAccountId() {

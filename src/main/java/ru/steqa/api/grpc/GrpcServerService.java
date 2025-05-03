@@ -7,11 +7,11 @@ import ru.steqa.api.model.TransactionRegular;
 import ru.steqa.api.repository.ITransactionRegularRepository;
 import ru.steqa.api.scheme.transaction.AddTransactionScheme;
 import ru.steqa.api.service.transaction.ITransactionService;
+import ru.steqa.grpc.AddTransactionRequest;
 import ru.steqa.grpc.AddTransactionResponse;
 import ru.steqa.grpc.ApiServiceGrpc;
-import ru.steqa.grpc.AddTransactionRequest;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class GrpcServerService extends ApiServiceGrpc.ApiServiceImplBase {
                 .type(transactionRegular.getType())
                 .amount(transactionRegular.getAmount())
                 .description(transactionRegular.getDescription())
-                .date(LocalDate.now())
+                .date(ZonedDateTime.now())
                 .accountId(transactionRegular.getAccountId())
                 .categoryId(transactionRegular.getCategoryId())
                 .build();

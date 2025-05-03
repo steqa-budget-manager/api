@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 
 @Getter
@@ -33,7 +33,7 @@ public class Transaction {
     private String description;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private ZonedDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -57,7 +57,7 @@ public class Transaction {
     private Long categoryId;
 
     @Builder
-    public Transaction(TransactionType type, Long amount, String description, LocalDate date,
+    public Transaction(TransactionType type, Long amount, String description, ZonedDateTime date,
                        User user, Account account, TransactionCategory category) {
         this.type = type;
         this.amount = amount;
