@@ -1,6 +1,7 @@
 package ru.steqa.api.service.transaction;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
@@ -56,7 +57,7 @@ public class TransactionService implements ITransactionService {
 
     @Override
     public List<ResponseTransactionScheme> getTransactions(Long userId) {
-        return transactionRepository.findAllByUserId(userId)
+        return transactionRepository.findAllByUserId(userId, Sort.by(Sort.Direction.DESC, "date"))
                 .stream()
                 .map(this::toResponseScheme)
                 .toList();
@@ -65,7 +66,7 @@ public class TransactionService implements ITransactionService {
     @Override
     public List<ResponseTransactionScheme> getTransactions(Long userId, TransactionFilter filter) {
         Specification<Transaction> spec = TransactionSpecification.byFilter(userId, filter);
-        return transactionRepository.findAll(spec)
+        return transactionRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "date"))
                 .stream()
                 .map(this::toResponseScheme)
                 .toList();
