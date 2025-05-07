@@ -1,6 +1,7 @@
 package ru.steqa.api.service.transfer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.transfer.TransferNotFoundException;
@@ -51,7 +52,7 @@ public class TransferService implements ITransferService {
 
     @Override
     public List<ResponseTransferScheme> getTransfers(Long userId) {
-        return transferRepository.findAllByUserId(userId)
+        return transferRepository.findAllByUserId(userId, Sort.by(Sort.Direction.DESC, "date"))
                 .stream()
                 .map(this::toResponseScheme)
                 .toList();
