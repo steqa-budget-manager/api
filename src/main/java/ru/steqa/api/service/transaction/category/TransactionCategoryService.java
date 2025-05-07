@@ -1,6 +1,7 @@
 package ru.steqa.api.service.transaction.category;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryHasTransactionsException;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryNotFoundException;
@@ -13,7 +14,9 @@ import ru.steqa.api.repository.ITransactionRepository;
 import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.transaction.category.AddTransactionCategoryScheme;
 import ru.steqa.api.scheme.transaction.category.ResponseTransactionCategoryScheme;
+import ru.steqa.api.scheme.transaction.category.TransactionCategoryFilter;
 import ru.steqa.api.scheme.transaction.category.UpdateTransactionCategoryScheme;
+import ru.steqa.api.specification.TransactionCategorySpecification;
 
 import java.util.List;
 
@@ -30,6 +33,7 @@ public class TransactionCategoryService implements ITransactionCategoryService {
                 .orElseThrow(UserNotFoundException::new);
 
         TransactionCategory transactionCategoryToAdd = TransactionCategory.builder()
+                .type(request.getType())
                 .name(request.getName())
                 .user(user)
                 .build();
@@ -48,6 +52,15 @@ public class TransactionCategoryService implements ITransactionCategoryService {
     }
 
     @Override
+    public List<ResponseTransactionCategoryScheme> getTransactionCategories(Long userId, TransactionCategoryFilter filter) {
+        Specification<TransactionCategory> spec = TransactionCategorySpecification.byFilter(userId, filter);
+        return transactionCategoryRepository.findAll(spec)
+                .stream()
+                .map(this::toResponseScheme)
+                .toList();
+    }
+
+    @Override
     public ResponseTransactionCategoryScheme getTransactionCategoryById(Long userId, Long id) {
         TransactionCategory transactionCategory = transactionCategoryRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionCategoryNotFoundException::new);
@@ -60,6 +73,7 @@ public class TransactionCategoryService implements ITransactionCategoryService {
         TransactionCategory transactionCategoryToUpdate = transactionCategoryRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionCategoryNotFoundException::new);
 
+        if (request.getType() != null) transactionCategoryToUpdate.setType(request.getType());
         if (request.getName() != null) transactionCategoryToUpdate.setName(request.getName());
         if (request.getVisible() != null) transactionCategoryToUpdate.setVisible(request.getVisible());
 
@@ -82,6 +96,7 @@ public class TransactionCategoryService implements ITransactionCategoryService {
     private ResponseTransactionCategoryScheme toResponseScheme(TransactionCategory transactionCategory) {
         return ResponseTransactionCategoryScheme.builder()
                 .id(transactionCategory.getId())
+                .type(transactionCategory.getType())
                 .name(transactionCategory.getName())
                 .visible(transactionCategory.getVisible())
                 .build();

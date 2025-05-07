@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.steqa.api.scheme.transaction.category.AddTransactionCategoryScheme;
 import ru.steqa.api.scheme.transaction.category.ResponseTransactionCategoryScheme;
+import ru.steqa.api.scheme.transaction.category.TransactionCategoryFilter;
 import ru.steqa.api.scheme.transaction.category.UpdateTransactionCategoryScheme;
 import ru.steqa.api.service.transaction.category.ITransactionCategoryService;
 import ru.steqa.api.utility.AuthenticationUtility;
@@ -35,9 +36,9 @@ public class TransactionCategoryController {
 
     @GetMapping
     @Operation(summary = "Get all categories")
-    public ResponseEntity<List<ResponseTransactionCategoryScheme>> getAllTransactionCategories() {
+    public ResponseEntity<List<ResponseTransactionCategoryScheme>> getAllTransactionCategories(TransactionCategoryFilter filter) {
         Long userId = authUtility.getCurrentUserId();
-        return ResponseEntity.ok(transactionCategoryService.getTransactionCategories(userId));
+        return ResponseEntity.ok(transactionCategoryService.getTransactionCategories(userId, filter));
     }
 
     @GetMapping("/{id}")

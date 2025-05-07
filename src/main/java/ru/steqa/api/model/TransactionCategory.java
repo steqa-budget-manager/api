@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.util.List;
 
@@ -16,6 +18,11 @@ public class TransactionCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    private TransactionType type;
 
     @Column(nullable = false)
     private String name;
@@ -36,7 +43,8 @@ public class TransactionCategory {
     private Boolean visible = false;
 
     @Builder
-    public TransactionCategory(String name, User user) {
+    public TransactionCategory(TransactionType type, String name, User user) {
+        this.type = type;
         this.name = name;
         this.user = user;
         this.userId = user.getId();

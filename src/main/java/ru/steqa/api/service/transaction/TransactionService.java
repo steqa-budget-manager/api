@@ -8,7 +8,10 @@ import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.transaction.TransactionNotFoundException;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryNotFoundException;
 import ru.steqa.api.exception.user.UserNotFoundException;
-import ru.steqa.api.model.*;
+import ru.steqa.api.model.Account;
+import ru.steqa.api.model.Transaction;
+import ru.steqa.api.model.TransactionCategory;
+import ru.steqa.api.model.User;
 import ru.steqa.api.repository.IAccountRepository;
 import ru.steqa.api.repository.ITransactionCategoryRepository;
 import ru.steqa.api.repository.ITransactionRepository;
@@ -103,7 +106,6 @@ public class TransactionService implements ITransactionService {
         if (request.getAmount() != null) transactionToUpdate.setAmount(request.getAmount());
         if (request.getDescription() != null) transactionToUpdate.setDescription(request.getDescription());
         if (request.getDate() != null) transactionToUpdate.setDate(request.getDate());
-        if (request.getType() != null) transactionToUpdate.setType(request.getType());
 
         Transaction transaction = transactionRepository.save(transactionToUpdate);
 
