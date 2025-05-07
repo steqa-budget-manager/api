@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 
 @Getter
@@ -26,7 +26,7 @@ public class Transfer {
     private String description;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -50,7 +50,7 @@ public class Transfer {
     private Long toAccountId;
 
     @Builder
-    public Transfer(Long amount, String description, LocalDateTime date, User user, Account fromAccount, Account toAccount) {
+    public Transfer(Long amount, String description, ZonedDateTime date, User user, Account fromAccount, Account toAccount) {
         this.amount = amount;
         this.description = description;
         this.date = date;

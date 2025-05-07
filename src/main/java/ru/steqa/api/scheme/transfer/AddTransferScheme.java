@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import ru.steqa.api.scheme.validators.ValidDate;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 public class AddTransferScheme {
@@ -34,8 +34,8 @@ public class AddTransferScheme {
     @Max(Long.MAX_VALUE)
     private BigInteger toAccountId;
 
-    public LocalDateTime getDate() {
-        return LocalDateTime.parse(date);
+    public ZonedDateTime getDate() {
+        return ZonedDateTime.parse(date);
     }
 
     public Long getFromAccountId() {

@@ -5,8 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.transfer.TransferNotFoundException;
 import ru.steqa.api.exception.user.UserNotFoundException;
-import ru.steqa.api.model.*;
-import ru.steqa.api.repository.*;
+import ru.steqa.api.model.Account;
+import ru.steqa.api.model.Transfer;
+import ru.steqa.api.model.User;
+import ru.steqa.api.repository.IAccountRepository;
+import ru.steqa.api.repository.ITransferRepository;
+import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.transfer.AddTransferScheme;
 import ru.steqa.api.scheme.transfer.ResponseTransferScheme;
 import ru.steqa.api.scheme.transfer.UpdateTransferScheme;
@@ -104,7 +108,9 @@ public class TransferService implements ITransferService {
                 .description(transfer.getDescription())
                 .date(transfer.getDate())
                 .fromAccountId(transfer.getFromAccountId())
+                .fromAccount(transfer.getFromAccount().getName())
                 .toAccountId(transfer.getToAccountId())
+                .toAccount(transfer.getToAccount().getName())
                 .build();
     }
 }
