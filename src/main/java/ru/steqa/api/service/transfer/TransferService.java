@@ -81,8 +81,8 @@ public class TransferService implements ITransferService {
         if (request.getToAccountId() != null) {
             Account toAccount = accountRepository.findByUserIdAndId(userId, request.getToAccountId())
                     .orElseThrow(AccountNotFoundException::new);
-            transferToUpdate.setFromAccount(toAccount);
-            transferToUpdate.setFromAccountId(toAccount.getId());
+            transferToUpdate.setToAccount(toAccount);
+            transferToUpdate.setToAccountId(toAccount.getId());
         }
 
         if (request.getAmount() != null) transferToUpdate.setAmount(request.getAmount());
