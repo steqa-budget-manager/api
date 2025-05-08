@@ -9,7 +9,8 @@ public class TransactionCategorySpecification {
     public static Specification<TransactionCategory> byFilter(Long userId, TransactionCategoryFilter f) {
         return Specification
                 .where(userIdEquals(userId))
-                .and(typeEquals(f.getType()));
+                .and(typeEquals(f.getType()))
+                .and(visibleEquals(f.getVisible()));
     }
 
     private static Specification<TransactionCategory> userIdEquals(Long userId) {
@@ -20,5 +21,10 @@ public class TransactionCategorySpecification {
     private static Specification<TransactionCategory> typeEquals(TransactionType type) {
         return (root, cq, cb) ->
                 type == null ? null : cb.equal(root.get("type"), type);
+    }
+
+    private static Specification<TransactionCategory> visibleEquals(Boolean visible) {
+        return (root, cq, cb) ->
+                visible == null ? null : cb.equal(root.get("visible"), visible);
     }
 }

@@ -6,4 +6,5 @@ import ru.steqa.api.model.TransactionType;
 @Data
 public class TransactionCategoryFilter {
     private TransactionType type;
+    private Boolean visible;
 }
