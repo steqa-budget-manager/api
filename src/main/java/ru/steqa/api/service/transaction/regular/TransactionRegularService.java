@@ -65,7 +65,9 @@ public class TransactionRegularService implements ITransactionRegularService {
                 .amount(transactionRegular.getAmount())
                 .description(transactionRegular.getDescription())
                 .rule(request.getRule())
+                .account(transactionRegular.getAccount().getName())
                 .accountId(transactionRegular.getAccountId())
+                .category(transactionRegular.getCategory().getName())
                 .categoryId(transactionRegular.getCategoryId())
                 .build();
     }

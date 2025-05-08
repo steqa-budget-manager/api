@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 public class FixedYearRuleScheme extends AddRuleScheme {
     @NotNull
     @Min(1)
-    @Max(31)
+    @Max(28)
     private Integer day;
 
     @NotNull
