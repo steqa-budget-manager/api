@@ -34,6 +34,24 @@ public class GrpcClientService {
         return response.getRuleId();
     }
 
+    public String addIntervalDayRepetition(Long userId, Long transactionId, LocalDateTime nextExecution, Integer interval) {
+        IntervalSchedule intervalSchedule = IntervalSchedule.newBuilder()
+                .setDays(interval)
+                .build();
+
+        AddRuleRequest request = AddRuleRequest.newBuilder()
+                .setMode(Mode.INTERVAL_DAY)
+                .setTransactionType(Type.DEFAULT)
+                .setTransactionId(transactionId)
+                .setNextExecution(timeUtility.localDateTimeToInteger(nextExecution))
+                .setUserId(userId)
+                .setInterval(intervalSchedule)
+                .build();
+
+        RuleIdResponse response = blockingStub.addRule(request);
+        return response.getRuleId();
+    }
+
     public Boolean deleteRepetition(String ruleId) {
         DeleteRuleRequest request = DeleteRuleRequest.newBuilder()
                 .setRuleId(ruleId)

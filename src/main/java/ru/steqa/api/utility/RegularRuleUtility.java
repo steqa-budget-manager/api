@@ -35,7 +35,12 @@ public class RegularRuleUtility {
             }
             case INTERVAL_DAY -> {
                 IntervalDayRuleScheme r = (IntervalDayRuleScheme) rule;
-                System.out.println(r.getDays());
+                return grpcClientService.addIntervalDayRepetition(
+                        userId,
+                        transactionRegularId,
+                        now.plusDays(r.getDays()),
+                        r.getDays()
+                );
             }
             case INTERVAL_SECOND -> {
                 IntervalSecondRuleScheme r = (IntervalSecondRuleScheme) rule;
@@ -72,11 +77,13 @@ public class RegularRuleUtility {
             case INTERVAL_DAY -> {
                 IntervalDayRuleScheme r = (IntervalDayRuleScheme) rule;
                 Integer days = r.getDays();
+                if (days == 1) return "Каждый день";
                 return "Каждые " + days + " " + StringUtility.plural(Long.valueOf(days), "день", "дня", "дней");
             }
             case INTERVAL_SECOND -> {
                 IntervalSecondRuleScheme r = (IntervalSecondRuleScheme) rule;
                 Long seconds = r.getSeconds();
+                if (seconds == 1) return "Каждую секунду";
                 return "Каждые " + seconds + " " + StringUtility.plural(seconds, "секунда", "секунды", "секунд");
             }
         }
