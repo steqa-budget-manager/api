@@ -70,6 +70,26 @@ public class GrpcClientService {
         return response.getRuleId();
     }
 
+    public String addFixedYearRepetition(Long userId, Long transactionId, LocalDateTime nextExecution, Integer month, Integer day) {
+        FixedSchedule fixedSchedule = FixedSchedule.newBuilder()
+                .setMonth(month)
+                .setDay(day)
+                .build();
+
+        AddRuleRequest request = AddRuleRequest.newBuilder()
+                .setMode(Mode.FIXED_YEAR)
+                .setTransactionType(Type.DEFAULT)
+                .setTransactionId(transactionId)
+                .setNextExecution(timeUtility.localDateTimeToInteger(nextExecution))
+                .setUserId(userId)
+                .setFixed(fixedSchedule)
+                .build();
+
+        RuleIdResponse response = blockingStub.addRule(request);
+        return response.getRuleId();
+    }
+
+
     public Boolean deleteRepetition(String ruleId) {
         DeleteRuleRequest request = DeleteRuleRequest.newBuilder()
                 .setRuleId(ruleId)

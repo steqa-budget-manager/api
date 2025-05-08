@@ -7,6 +7,7 @@ import ru.steqa.api.scheme.transaction.regular.*;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @RequiredArgsConstructor
 @Component
@@ -18,36 +19,53 @@ public class RegularRuleUtility {
 
     private final GrpcClientService grpcClientService;
 
+    private static final Integer timeOffset = 3;
+
     public String addRegularRule(Long userId, Long transactionRegularId, AddRuleScheme rule) {
-        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
 
         String mode = rule.getMode();
 
         switch (mode) {
             case FIXED_YEAR -> {
                 FixedYearRuleScheme r = (FixedYearRuleScheme) rule;
-                System.out.println(r.getDay());
-                System.out.println(r.getMonth());
+                Integer month = r.getMonth();
+                Integer day = r.getDay();
+                now = now.withHour(timeOffset).withMinute(0).withSecond(0).withNano(0);
+                LocalDateTime nextExecution;
+                if (now.getMonthValue() <= month && now.getDayOfMonth() < day) {
+                    nextExecution = now.withMonth(month).withDayOfMonth(day);
+                } else {
+                    nextExecution = now.plusYears(1).withMonth(month).withDayOfMonth(day);
+                }
+                return grpcClientService.addFixedYearRepetition(
+                        userId,
+                        transactionRegularId,
+                        nextExecution,
+                        month,
+                        day
+                );
             }
             case FIXED_MONTH -> {
                 FixedMonthRuleScheme r = (FixedMonthRuleScheme) rule;
                 Integer day = r.getDay();
+                now = now.withHour(timeOffset).withMinute(0).withSecond(0).withNano(0);
                 LocalDateTime nextExecution;
                 if (now.getDayOfMonth() < day) {
                     nextExecution = now.withDayOfMonth(day);
                 } else {
                     nextExecution = now.plusMonths(1).withDayOfMonth(day);
                 }
-                nextExecution = nextExecution.withHour(3).withMinute(0).withSecond(0).withNano(0);
                 return grpcClientService.addFixedMonthRepetition(
                         userId,
                         transactionRegularId,
                         nextExecution,
-                        r.getDay()
+                        day
                 );
             }
             case INTERVAL_DAY -> {
                 IntervalDayRuleScheme r = (IntervalDayRuleScheme) rule;
+                now = now.withHour(timeOffset).withMinute(0).withSecond(0).withNano(0);
                 return grpcClientService.addIntervalDayRepetition(
                         userId,
                         transactionRegularId,
@@ -56,6 +74,7 @@ public class RegularRuleUtility {
                 );
             }
             case INTERVAL_SECOND -> {
+                now = LocalDateTime.now(Clock.systemUTC());
                 IntervalSecondRuleScheme r = (IntervalSecondRuleScheme) rule;
                 return grpcClientService.addIntervalSecondRepetition(
                         userId,
