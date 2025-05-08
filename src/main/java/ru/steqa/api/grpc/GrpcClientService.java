@@ -52,6 +52,24 @@ public class GrpcClientService {
         return response.getRuleId();
     }
 
+    public String addFixedMonthRepetition(Long userId, Long transactionId, LocalDateTime nextExecution, Integer day) {
+        FixedSchedule fixedSchedule = FixedSchedule.newBuilder()
+                .setDay(day)
+                .build();
+
+        AddRuleRequest request = AddRuleRequest.newBuilder()
+                .setMode(Mode.FIXED_MONTH)
+                .setTransactionType(Type.DEFAULT)
+                .setTransactionId(transactionId)
+                .setNextExecution(timeUtility.localDateTimeToInteger(nextExecution))
+                .setUserId(userId)
+                .setFixed(fixedSchedule)
+                .build();
+
+        RuleIdResponse response = blockingStub.addRule(request);
+        return response.getRuleId();
+    }
+
     public Boolean deleteRepetition(String ruleId) {
         DeleteRuleRequest request = DeleteRuleRequest.newBuilder()
                 .setRuleId(ruleId)

@@ -31,7 +31,20 @@ public class RegularRuleUtility {
             }
             case FIXED_MONTH -> {
                 FixedMonthRuleScheme r = (FixedMonthRuleScheme) rule;
-                System.out.println(r.getDay());
+                Integer day = r.getDay();
+                LocalDateTime nextExecution;
+                if (now.getDayOfMonth() < day) {
+                    nextExecution = now.withDayOfMonth(day);
+                } else {
+                    nextExecution = now.plusMonths(1).withDayOfMonth(day);
+                }
+                nextExecution = nextExecution.withHour(3).withMinute(0).withSecond(0).withNano(0);
+                return grpcClientService.addFixedMonthRepetition(
+                        userId,
+                        transactionRegularId,
+                        nextExecution,
+                        r.getDay()
+                );
             }
             case INTERVAL_DAY -> {
                 IntervalDayRuleScheme r = (IntervalDayRuleScheme) rule;
