@@ -3,17 +3,17 @@ package ru.steqa.api.scheme.user;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 public class ResponseUserScheme {
     private Long id;
     private String email;
     private String password;
-    private LocalDateTime createdAt;
+    private ZonedDateTime createdAt;
 
     @Builder
-    public ResponseUserScheme(Long id, String email, String password, LocalDateTime createdAt) {
+    public ResponseUserScheme(Long id, String email, String password, ZonedDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.password = password;
