@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.ZonedDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,11 +32,16 @@ public class Account {
     @JsonIgnore
     private Boolean visible = true;
 
+    @Column(name = "created_at", nullable = false)
+    @ColumnDefault("now()")
+    private ZonedDateTime createdAt = ZonedDateTime.now();
+
     @Builder
     public Account(String name, User user) {
         this.name = name;
         this.user = user;
         this.userId = user.getId();
         this.visible = true;
+        this.createdAt = ZonedDateTime.now();
     }
 }

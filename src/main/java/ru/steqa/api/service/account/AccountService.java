@@ -91,6 +91,7 @@ public class AccountService implements IAccountService {
                 .id(account.getId())
                 .name(account.getName())
                 .visible(account.getVisible())
+                .createdAt(account.getCreatedAt())
                 .build();
     }
 }
