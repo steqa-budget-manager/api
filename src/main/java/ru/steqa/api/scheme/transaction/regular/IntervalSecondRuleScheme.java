@@ -9,5 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class IntervalSecondRuleScheme extends AddRuleScheme {
     @NotNull
-    @Min(1) private Long seconds;
+    @Min(1)
+    private Long seconds;
 }

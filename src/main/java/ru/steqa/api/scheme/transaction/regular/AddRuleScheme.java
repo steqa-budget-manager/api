@@ -22,6 +22,7 @@ import lombok.Data;
 public abstract class AddRuleScheme {
     @NotNull @Pattern(regexp = "DEFAULT|DEPOSIT")
     private String transactionType;
+
     @NotNull
     private String mode;
 }

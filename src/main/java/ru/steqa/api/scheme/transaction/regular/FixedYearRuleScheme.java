@@ -9,6 +9,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FixedYearRuleScheme extends AddRuleScheme {
-    @NotNull @Min(1) @Max(31) private Integer day;
-    @NotNull @Min(1) @Max(12) private Integer month;
+    @NotNull
+    @Min(1)
+    @Max(31)
+    private Integer day;
+
+    @NotNull
+    @Min(1)
+    @Max(12)
+    private Integer month;
 }

@@ -8,7 +8,7 @@ import ru.steqa.api.model.TransactionType;
 public class ResponseTransactionRegularScheme {
     private Long id;
     private TransactionType type;
-    private String name;
+    private String shortName;
     private Long amount;
     private String description;
     private AddRuleScheme rule;
@@ -16,11 +16,11 @@ public class ResponseTransactionRegularScheme {
     private Long categoryId;
 
     @Builder
-    public ResponseTransactionRegularScheme(Long id, TransactionType type, String name, Long amount, String description,
-                                            AddRuleScheme rule, Long accountId, Long categoryId) {
+    public ResponseTransactionRegularScheme(Long id, TransactionType type, String shortName, Long amount,
+                                            String description, AddRuleScheme rule, Long accountId, Long categoryId) {
         this.id = id;
         this.type = type;
-        this.name = name;
+        this.shortName = shortName;
         this.amount = amount;
         this.description = description;
         this.rule = rule;

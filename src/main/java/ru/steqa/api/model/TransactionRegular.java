@@ -23,8 +23,8 @@ public class TransactionRegular {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private TransactionType type;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "short_name", nullable = false)
+    private String shortName;
 
     @Column(nullable = false)
     @Max(100000000000000000L)
@@ -57,10 +57,10 @@ public class TransactionRegular {
     private Long categoryId;
 
     @Builder
-    public TransactionRegular(TransactionType type, String name, Long amount, String description, String repetitionRuleId,
-                               User user, Account account, TransactionCategory category) {
+    public TransactionRegular(TransactionType type, String shortName, Long amount, String description,
+                              String repetitionRuleId, User user, Account account, TransactionCategory category) {
         this.type = type;
-        this.name = name;
+        this.shortName = shortName;
         this.amount = amount;
         this.description = description;
         this.repetitionRuleId = repetitionRuleId;

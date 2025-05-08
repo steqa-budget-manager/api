@@ -53,4 +53,33 @@ public class RegularRuleUtility {
     public Boolean deleteRegularRule(String regularRuleId) {
         return grpcClientService.deleteRepetition(regularRuleId);
     }
+
+    public String getShortName(AddRuleScheme rule) {
+        String mode = rule.getMode();
+
+        switch (mode) {
+            case FIXED_YEAR -> {
+                FixedYearRuleScheme r = (FixedYearRuleScheme) rule;
+                Integer day = r.getDay();
+                Integer month = r.getMonth();
+                return "Каждый год " + day + " " + StringUtility.getMonthName(month);
+            }
+            case FIXED_MONTH -> {
+                FixedMonthRuleScheme r = (FixedMonthRuleScheme) rule;
+                Integer day = r.getDay();
+                return "Каждый месяц " + day + " числа";
+            }
+            case INTERVAL_DAY -> {
+                IntervalDayRuleScheme r = (IntervalDayRuleScheme) rule;
+                Integer days = r.getDays();
+                return "Каждые " + days + " " + StringUtility.plural(Long.valueOf(days), "день", "дня", "дней");
+            }
+            case INTERVAL_SECOND -> {
+                IntervalSecondRuleScheme r = (IntervalSecondRuleScheme) rule;
+                Long seconds = r.getSeconds();
+                return "Каждые " + seconds + " " + StringUtility.plural(seconds, "секунда", "секунды", "секунд");
+            }
+        }
+        return null;
+    }
 }

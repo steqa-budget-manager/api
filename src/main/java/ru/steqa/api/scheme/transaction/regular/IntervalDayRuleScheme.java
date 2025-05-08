@@ -8,5 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class IntervalDayRuleScheme extends AddRuleScheme {
-    @NotNull @Min(1) private Integer days;
+    @NotNull
+    @Min(1)
+    private Integer days;
 }

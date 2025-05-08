@@ -7,8 +7,14 @@ import ru.steqa.api.exception.transaction.TransactionNotFoundException;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryNotFoundException;
 import ru.steqa.api.exception.transaction.regular.DeleteTransactionRegularException;
 import ru.steqa.api.exception.user.UserNotFoundException;
-import ru.steqa.api.model.*;
-import ru.steqa.api.repository.*;
+import ru.steqa.api.model.Account;
+import ru.steqa.api.model.TransactionCategory;
+import ru.steqa.api.model.TransactionRegular;
+import ru.steqa.api.model.User;
+import ru.steqa.api.repository.IAccountRepository;
+import ru.steqa.api.repository.ITransactionCategoryRepository;
+import ru.steqa.api.repository.ITransactionRegularRepository;
+import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.transaction.regular.AddTransactionRegularScheme;
 import ru.steqa.api.scheme.transaction.regular.ResponseTransactionRegularScheme;
 import ru.steqa.api.utility.RegularRuleUtility;
@@ -37,9 +43,10 @@ public class TransactionRegularService implements ITransactionRegularService {
 
         TransactionRegular transactionRegularToAdd = TransactionRegular.builder()
                 .type(request.getType())
-                .name(request.getName())
+                .shortName(regularRuleUtility.getShortName(request.getRule()))
                 .amount(request.getAmount())
                 .description(request.getDescription())
+                .repetitionRuleId("temp")
                 .user(user)
                 .account(account)
                 .category(category)
@@ -54,7 +61,7 @@ public class TransactionRegularService implements ITransactionRegularService {
         return ResponseTransactionRegularScheme.builder()
                 .id(transactionRegular.getId())
                 .type(transactionRegular.getType())
-                .name(transactionRegular.getName())
+                .shortName(transactionRegular.getShortName())
                 .amount(transactionRegular.getAmount())
                 .description(transactionRegular.getDescription())
                 .rule(request.getRule())

@@ -1,5 +1,6 @@
 package ru.steqa.api.scheme.transaction.regular;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -17,10 +18,6 @@ public class AddTransactionRegularScheme {
     private String type;
 
     @NotNull
-    @Length(min = 1, max = 255)
-    private String name;
-
-    @NotNull
     @Min(0)
     @Max(100000000000000000L)
     private Long amount;
@@ -28,6 +25,7 @@ public class AddTransactionRegularScheme {
     @Length(max = 1000, message = "length must be less than or equal to 1000")
     private String description;
 
+    @Valid
     private AddRuleScheme rule;
 
     @NotNull
