@@ -1,6 +1,8 @@
 package ru.steqa.api.service.account;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountHasTransactionsException;
 import ru.steqa.api.exception.account.AccountHasTransfersException;
@@ -14,9 +16,11 @@ import ru.steqa.api.repository.IAccountRepository;
 import ru.steqa.api.repository.ITransactionRepository;
 import ru.steqa.api.repository.ITransferRepository;
 import ru.steqa.api.repository.IUserRepository;
+import ru.steqa.api.scheme.account.AccountFilter;
 import ru.steqa.api.scheme.account.AddAccountScheme;
 import ru.steqa.api.scheme.account.ResponseAccountScheme;
 import ru.steqa.api.scheme.account.UpdateAccountScheme;
+import ru.steqa.api.specification.AccountSpecification;
 
 import java.util.List;
 
@@ -45,7 +49,16 @@ public class AccountService implements IAccountService {
 
     @Override
     public List<ResponseAccountScheme> getAccounts(Long userId) {
-        return accountRepository.findAllByUserId(userId)
+        return accountRepository.findAllByUserId(userId, Sort.by(Sort.Direction.ASC, "createdAt"))
+                .stream()
+                .map(this::toResponseScheme)
+                .toList();
+    }
+
+    @Override
+    public List<ResponseAccountScheme> getAccounts(Long userId, AccountFilter filter) {
+        Specification<Account> spec = AccountSpecification.byFilter(userId, filter);
+        return accountRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "createdAt"))
                 .stream()
                 .map(this::toResponseScheme)
                 .toList();

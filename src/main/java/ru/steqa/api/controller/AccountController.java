@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.steqa.api.scheme.account.AccountFilter;
 import ru.steqa.api.scheme.account.AddAccountScheme;
 import ru.steqa.api.scheme.account.ResponseAccountScheme;
 import ru.steqa.api.scheme.account.UpdateAccountScheme;
@@ -35,9 +36,9 @@ public class AccountController {
 
     @GetMapping
     @Operation(summary = "Get all accounts")
-    public ResponseEntity<List<ResponseAccountScheme>> getAllAccounts() {
+    public ResponseEntity<List<ResponseAccountScheme>> getAllAccounts(AccountFilter filter) {
         Long userId = authUtility.getCurrentUserId();
-        return ResponseEntity.ok(accountService.getAccounts(userId));
+        return ResponseEntity.ok(accountService.getAccounts(userId, filter));
     }
 
     @GetMapping("/{id}")
