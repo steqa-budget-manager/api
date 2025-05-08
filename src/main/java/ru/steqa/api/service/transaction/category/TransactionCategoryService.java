@@ -99,6 +99,7 @@ public class TransactionCategoryService implements ITransactionCategoryService {
                 .type(transactionCategory.getType())
                 .name(transactionCategory.getName())
                 .visible(transactionCategory.getVisible())
+                .createdAt(transactionCategory.getCreatedAt())
                 .build();
     }
 }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -42,6 +43,10 @@ public class TransactionCategory {
     @JsonIgnore
     private Boolean visible = false;
 
+    @Column(name = "created_at", nullable = false)
+    @ColumnDefault("now()")
+    private ZonedDateTime createdAt = ZonedDateTime.now();
+
     @Builder
     public TransactionCategory(TransactionType type, String name, User user) {
         this.type = type;
@@ -49,5 +54,6 @@ public class TransactionCategory {
         this.user = user;
         this.userId = user.getId();
         this.visible = true;
+        this.createdAt = ZonedDateTime.now();
     }
 }
