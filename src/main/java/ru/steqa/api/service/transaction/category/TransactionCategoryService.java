@@ -1,6 +1,7 @@
 package ru.steqa.api.service.transaction.category;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryHasTransactionsException;
@@ -45,7 +46,7 @@ public class TransactionCategoryService implements ITransactionCategoryService {
 
     @Override
     public List<ResponseTransactionCategoryScheme> getTransactionCategories(Long userId) {
-        return transactionCategoryRepository.findAllByUserId(userId)
+        return transactionCategoryRepository.findAllByUserId(userId, Sort.by(Sort.Direction.ASC, "createdAt"))
                 .stream()
                 .map(this::toResponseScheme)
                 .toList();
@@ -54,7 +55,7 @@ public class TransactionCategoryService implements ITransactionCategoryService {
     @Override
     public List<ResponseTransactionCategoryScheme> getTransactionCategories(Long userId, TransactionCategoryFilter filter) {
         Specification<TransactionCategory> spec = TransactionCategorySpecification.byFilter(userId, filter);
-        return transactionCategoryRepository.findAll(spec)
+        return transactionCategoryRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "createdAt"))
                 .stream()
                 .map(this::toResponseScheme)
                 .toList();
