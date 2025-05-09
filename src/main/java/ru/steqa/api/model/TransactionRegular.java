@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -34,6 +37,10 @@ public class TransactionRegular {
 
     @Column(name = "repetition_rule_id", nullable = false)
     private String repetitionRuleId;
+
+    @Column(name = "created_at", nullable = false)
+    @ColumnDefault("now()")
+    private ZonedDateTime createdAt = ZonedDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -64,6 +71,7 @@ public class TransactionRegular {
         this.amount = amount;
         this.description = description;
         this.repetitionRuleId = repetitionRuleId;
+        this.createdAt = ZonedDateTime.now();
         this.user = user;
         this.userId = user.getId();
         this.account = account;
