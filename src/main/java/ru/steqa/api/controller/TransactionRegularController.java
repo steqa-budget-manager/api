@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.steqa.api.scheme.transaction.regular.AddTransactionRegularScheme;
 import ru.steqa.api.scheme.transaction.regular.ResponseTransactionRegularScheme;
 import ru.steqa.api.scheme.transaction.regular.TransactionRegularFilter;
+import ru.steqa.api.scheme.transaction.regular.UpdateTransactionRegularScheme;
 import ru.steqa.api.service.transaction.regular.ITransactionRegularService;
 import ru.steqa.api.utility.AuthenticationUtility;
 
@@ -24,7 +25,7 @@ public class TransactionRegularController {
 
     @PostMapping
     @Operation(summary = "Add transaction regular")
-    public ResponseEntity<ResponseTransactionRegularScheme> addRule(@RequestBody @Valid AddTransactionRegularScheme request) {
+    public ResponseEntity<ResponseTransactionRegularScheme> addTransactionRegular(@RequestBody @Valid AddTransactionRegularScheme request) {
         Long userId = authUtility.getCurrentUserId();
         ResponseTransactionRegularScheme transactionRegular = transactionRegularService.addTransactionRegular(userId, request);
         return ResponseEntity.ok(transactionRegular);
@@ -44,6 +45,15 @@ public class TransactionRegularController {
         return ResponseEntity.ok(transactionRegularService.getTransactionRegularById(userId, id));
     }
 
+    @PatchMapping("/{id}")
+    @Operation(summary = "Update transaction regular")
+    public ResponseEntity<ResponseTransactionRegularScheme> updateTransactionRegular(
+            @PathVariable Long id,
+            @RequestBody @Valid UpdateTransactionRegularScheme request
+    ) {
+        Long userId = authUtility.getCurrentUserId();
+        return ResponseEntity.ok(transactionRegularService.updateTransactionRegular(userId, id, request));
+    }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete transaction regular")

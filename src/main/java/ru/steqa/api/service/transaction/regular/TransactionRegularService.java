@@ -20,6 +20,7 @@ import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.transaction.regular.AddTransactionRegularScheme;
 import ru.steqa.api.scheme.transaction.regular.ResponseTransactionRegularScheme;
 import ru.steqa.api.scheme.transaction.regular.TransactionRegularFilter;
+import ru.steqa.api.scheme.transaction.regular.UpdateTransactionRegularScheme;
 import ru.steqa.api.specification.TransactionRegularSpecification;
 import ru.steqa.api.utility.RegularRuleUtility;
 
@@ -80,6 +81,34 @@ public class TransactionRegularService implements ITransactionRegularService {
     public ResponseTransactionRegularScheme getTransactionRegularById(Long userId, Long id) {
         TransactionRegular transactionRegular = transactionRegularRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionNotFoundException::new);
+
+        return toResponseScheme(transactionRegular);
+    }
+
+    @Override
+    public ResponseTransactionRegularScheme updateTransactionRegular(Long userId, Long id, UpdateTransactionRegularScheme request) {
+        TransactionRegular transactionRegularToUpdate = transactionRegularRepository.findByUserIdAndId(userId, id)
+                .orElseThrow(TransactionNotFoundException::new);
+
+        if (request.getAccountId() != null) {
+            Account account = accountRepository.findByUserIdAndId(userId, request.getAccountId())
+                    .orElseThrow(AccountNotFoundException::new);
+            transactionRegularToUpdate.setAccount(account);
+            transactionRegularToUpdate.setAccountId(account.getId());
+        }
+
+        if (request.getCategoryId() != null) {
+            TransactionCategory category = transactionCategoryRepository.findByUserIdAndId(userId, request.getCategoryId())
+                    .orElseThrow(TransactionCategoryNotFoundException::new);
+            transactionRegularToUpdate.setCategory(category);
+            transactionRegularToUpdate.setCategoryId(category.getId());
+        }
+
+        if (request.getType() != null) transactionRegularToUpdate.setType(request.getType());
+        if (request.getAmount() != null) transactionRegularToUpdate.setAmount(request.getAmount());
+        if (request.getDescription() != null) transactionRegularToUpdate.setDescription(request.getDescription());
+
+        TransactionRegular transactionRegular = transactionRegularRepository.save(transactionRegularToUpdate);
 
         return toResponseScheme(transactionRegular);
     }
