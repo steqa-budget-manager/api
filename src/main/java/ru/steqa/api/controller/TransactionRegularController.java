@@ -6,7 +6,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.steqa.api.scheme.transaction.regular.*;
+import ru.steqa.api.scheme.transaction.regular.AddTransactionRegularScheme;
+import ru.steqa.api.scheme.transaction.regular.ResponseTransactionRegularScheme;
+import ru.steqa.api.scheme.transaction.regular.TransactionRegularFilter;
 import ru.steqa.api.service.transaction.regular.ITransactionRegularService;
 import ru.steqa.api.utility.AuthenticationUtility;
 
@@ -30,9 +32,9 @@ public class TransactionRegularController {
 
     @GetMapping
     @Operation(summary = "Get all transaction regulars")
-    public ResponseEntity<List<ResponseTransactionRegularScheme>> getAllTransactionRegulars() {
+    public ResponseEntity<List<ResponseTransactionRegularScheme>> getAllTransactionRegulars(TransactionRegularFilter filter) {
         Long userId = authUtility.getCurrentUserId();
-        return ResponseEntity.ok(transactionRegularService.getTransactionRegulars(userId));
+        return ResponseEntity.ok(transactionRegularService.getTransactionRegulars(userId, filter));
     }
 
     @DeleteMapping("/{id}")

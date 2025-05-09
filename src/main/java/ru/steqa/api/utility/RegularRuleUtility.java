@@ -99,12 +99,12 @@ public class RegularRuleUtility {
                 FixedYearRuleScheme r = (FixedYearRuleScheme) rule;
                 Integer day = r.getDay();
                 Integer month = r.getMonth();
-                return "Каждый год " + day + " " + StringUtility.getMonthName(month);
+                return "Ежегодно " + day + " " + StringUtility.getMonthName(month);
             }
             case FIXED_MONTH -> {
                 FixedMonthRuleScheme r = (FixedMonthRuleScheme) rule;
                 Integer day = r.getDay();
-                return "Каждый месяц " + day + " числа";
+                return "Ежемесячно " + day + " числа";
             }
             case INTERVAL_DAY -> {
                 IntervalDayRuleScheme r = (IntervalDayRuleScheme) rule;

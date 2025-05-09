@@ -1,6 +1,8 @@
 package ru.steqa.api.service.transaction.regular;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.transaction.TransactionNotFoundException;
@@ -17,6 +19,8 @@ import ru.steqa.api.repository.ITransactionRegularRepository;
 import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.transaction.regular.AddTransactionRegularScheme;
 import ru.steqa.api.scheme.transaction.regular.ResponseTransactionRegularScheme;
+import ru.steqa.api.scheme.transaction.regular.TransactionRegularFilter;
+import ru.steqa.api.specification.TransactionRegularSpecification;
 import ru.steqa.api.utility.RegularRuleUtility;
 
 import java.util.List;
@@ -58,23 +62,18 @@ public class TransactionRegularService implements ITransactionRegularService {
         transactionRegular.setRepetitionRuleId(repetitionRuleId);
         transactionRegular = transactionRegularRepository.save(transactionRegularToAdd);
 
-        return ResponseTransactionRegularScheme.builder()
-                .id(transactionRegular.getId())
-                .type(transactionRegular.getType())
-                .shortName(transactionRegular.getShortName())
-                .amount(transactionRegular.getAmount())
-                .description(transactionRegular.getDescription())
-                .rule(request.getRule())
-                .account(transactionRegular.getAccount().getName())
-                .accountId(transactionRegular.getAccountId())
-                .category(transactionRegular.getCategory().getName())
-                .categoryId(transactionRegular.getCategoryId())
-                .build();
+        ResponseTransactionRegularScheme response = toResponseScheme(transactionRegular);
+        response.setRule(request.getRule());
+        return response;
     }
 
     @Override
-    public List<ResponseTransactionRegularScheme> getTransactionRegulars(Long userId) {
-        return List.of();
+    public List<ResponseTransactionRegularScheme> getTransactionRegulars(Long userId, TransactionRegularFilter filter) {
+        Specification<TransactionRegular> spec = TransactionRegularSpecification.byFilter(userId, filter);
+        return transactionRegularRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "createdAt"))
+                .stream()
+                .map(this::toResponseScheme)
+                .toList();
     }
 
     @Override
@@ -89,5 +88,20 @@ public class TransactionRegularService implements ITransactionRegularService {
         } else {
             throw new DeleteTransactionRegularException();
         }
+    }
+
+    private ResponseTransactionRegularScheme toResponseScheme(TransactionRegular transactionRegular) {
+        return ResponseTransactionRegularScheme.builder()
+                .id(transactionRegular.getId())
+                .type(transactionRegular.getType())
+                .shortName(transactionRegular.getShortName())
+                .amount(transactionRegular.getAmount())
+                .description(transactionRegular.getDescription())
+                .createdAt(transactionRegular.getCreatedAt())
+                .account(transactionRegular.getAccount().getName())
+                .accountId(transactionRegular.getAccountId())
+                .category(transactionRegular.getCategory().getName())
+                .categoryId(transactionRegular.getCategoryId())
+                .build();
     }
 }
