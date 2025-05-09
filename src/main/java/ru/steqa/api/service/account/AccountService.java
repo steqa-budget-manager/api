@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.steqa.api.dto.AccountBalanceDto;
 import ru.steqa.api.exception.account.AccountHasTransactionsException;
 import ru.steqa.api.exception.account.AccountHasTransfersException;
 import ru.steqa.api.exception.account.AccountNotFoundException;
@@ -70,6 +71,12 @@ public class AccountService implements IAccountService {
                 .orElseThrow(AccountNotFoundException::new);
 
         return toResponseScheme(account);
+    }
+
+    @Override
+    public List<AccountBalanceDto> getAccountBalances(Long userId, Boolean visible) {
+        System.out.println(visible);
+        return accountRepository.getAccountBalances(userId, visible);
     }
 
     @Override

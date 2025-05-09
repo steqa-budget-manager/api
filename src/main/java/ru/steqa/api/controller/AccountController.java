@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.steqa.api.dto.AccountBalanceDto;
 import ru.steqa.api.scheme.account.AccountFilter;
 import ru.steqa.api.scheme.account.AddAccountScheme;
 import ru.steqa.api.scheme.account.ResponseAccountScheme;
@@ -39,6 +40,15 @@ public class AccountController {
     public ResponseEntity<List<ResponseAccountScheme>> getAllAccounts(AccountFilter filter) {
         Long userId = authUtility.getCurrentUserId();
         return ResponseEntity.ok(accountService.getAccounts(userId, filter));
+    }
+
+    @GetMapping("/balances")
+    @Operation(summary = "Get account balances")
+    public ResponseEntity<List<AccountBalanceDto>> getAccountBalances(AccountFilter filter) {
+        Long userId = authUtility.getCurrentUserId();
+        Boolean visible = filter.getVisible();
+        System.out.println(visible);
+        return ResponseEntity.ok(accountService.getAccountBalances(userId, visible));
     }
 
     @GetMapping("/{id}")
