@@ -77,6 +77,14 @@ public class TransactionRegularService implements ITransactionRegularService {
     }
 
     @Override
+    public ResponseTransactionRegularScheme getTransactionRegularById(Long userId, Long id) {
+        TransactionRegular transactionRegular = transactionRegularRepository.findByUserIdAndId(userId, id)
+                .orElseThrow(TransactionNotFoundException::new);
+
+        return toResponseScheme(transactionRegular);
+    }
+
+    @Override
     public void deleteTransactionRegularById(Long userId, Long id) {
         TransactionRegular transactionRegular = transactionRegularRepository.findByUserIdAndId(userId, id)
                 .orElseThrow(TransactionNotFoundException::new);

@@ -19,5 +19,6 @@ public interface ITransactionRepository extends JpaRepository<Transaction, Long>
     List<Transaction> findAllByUserId(Long userId, Sort sort);
     List<Transaction> findAllByUserIdAndAccountId(Long userId, Long id);
     List<Transaction> findAllByUserIdAndCategoryId(Long userId, Long id);
+    @EntityGraph(attributePaths = {"account", "category"})
     Optional<Transaction> findByUserIdAndId(Long userId, Long id);
 }

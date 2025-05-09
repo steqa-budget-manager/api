@@ -14,5 +14,6 @@ public interface ITransactionRegularRepository extends JpaRepository<Transaction
     List<TransactionRegular> findAll(Specification<TransactionRegular> spec, Sort sort);
     @EntityGraph(attributePaths = {"account", "category"})
     List<TransactionRegular> findAllByUserId(Long userId);
+    @EntityGraph(attributePaths = {"account", "category"})
     Optional<TransactionRegular> findByUserIdAndId(Long userId, Long id);
 }

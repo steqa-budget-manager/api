@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface ITransferRepository extends JpaRepository<Transfer, Long> {
     @EntityGraph(attributePaths = {"fromAccount", "toAccount"})
     List<Transfer> findAllByUserId(Long userId, Sort sort);
+    @EntityGraph(attributePaths = {"fromAccount", "toAccount"})
     Optional<Transfer> findByUserIdAndId(Long userId, Long id);
     List<Transfer> findAllByUserIdAndFromAccountIdOrUserIdAndToAccountId(Long userId, Long fromAccountId, Long userId2, Long toAccountId);
 }

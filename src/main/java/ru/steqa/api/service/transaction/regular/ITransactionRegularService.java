@@ -9,5 +9,6 @@ import java.util.List;
 public interface ITransactionRegularService {
     ResponseTransactionRegularScheme addTransactionRegular(Long userId, AddTransactionRegularScheme transactionRegular);
     List<ResponseTransactionRegularScheme> getTransactionRegulars(Long userId, TransactionRegularFilter filter);
+    ResponseTransactionRegularScheme getTransactionRegularById(Long userId, Long id);
     void deleteTransactionRegularById(Long userId, Long id);
 }
