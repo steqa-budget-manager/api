@@ -1,16 +1,26 @@
 package ru.steqa.api.service.transaction.template;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.steqa.api.exception.account.AccountNotFoundException;
 import ru.steqa.api.exception.transaction.category.TransactionCategoryNotFoundException;
 import ru.steqa.api.exception.transaction.template.TransactionTemplateNotFoundException;
 import ru.steqa.api.exception.user.UserNotFoundException;
-import ru.steqa.api.model.*;
-import ru.steqa.api.repository.*;
+import ru.steqa.api.model.Account;
+import ru.steqa.api.model.TransactionCategory;
+import ru.steqa.api.model.TransactionTemplate;
+import ru.steqa.api.model.User;
+import ru.steqa.api.repository.IAccountRepository;
+import ru.steqa.api.repository.ITransactionCategoryRepository;
+import ru.steqa.api.repository.ITransactionTemplateRepository;
+import ru.steqa.api.repository.IUserRepository;
 import ru.steqa.api.scheme.transaction.template.AddTransactionTemplateScheme;
 import ru.steqa.api.scheme.transaction.template.ResponseTransactionTemplateScheme;
+import ru.steqa.api.scheme.transaction.template.TransactionTemplateFilter;
 import ru.steqa.api.scheme.transaction.template.UpdateTransactionTemplateScheme;
+import ru.steqa.api.specification.TransactionTemplateSpecification;
 
 import java.util.List;
 
@@ -48,8 +58,9 @@ public class TransactionTemplateService implements ITransactionTemplateService {
     }
 
     @Override
-    public List<ResponseTransactionTemplateScheme> getTransactionTemplates(Long userId) {
-        return transactionTemplateRepository.findAllByUserId(userId)
+    public List<ResponseTransactionTemplateScheme> getTransactionTemplates(Long userId, TransactionTemplateFilter filter) {
+        Specification<TransactionTemplate> spec = TransactionTemplateSpecification.byFilter(userId, filter);
+        return transactionTemplateRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "createdAt"))
                 .stream()
                 .map(this::toResponseScheme)
                 .toList();
@@ -107,7 +118,9 @@ public class TransactionTemplateService implements ITransactionTemplateService {
                 .amount(transactionTemplate.getAmount())
                 .description(transactionTemplate.getDescription())
                 .createdAt(transactionTemplate.getCreatedAt())
+                .account(transactionTemplate.getAccount().getName())
                 .accountId(transactionTemplate.getAccountId())
+                .category(transactionTemplate.getCategory().getName())
                 .categoryId(transactionTemplate.getCategoryId())
                 .build();
     }
