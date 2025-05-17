@@ -106,6 +106,7 @@ public class TransactionTemplateService implements ITransactionTemplateService {
                 .type(transactionTemplate.getType())
                 .amount(transactionTemplate.getAmount())
                 .description(transactionTemplate.getDescription())
+                .createdAt(transactionTemplate.getCreatedAt())
                 .accountId(transactionTemplate.getAccountId())
                 .categoryId(transactionTemplate.getCategoryId())
                 .build();
