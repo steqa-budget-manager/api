@@ -3,6 +3,17 @@ version: "3.8"
 name: budget-manager-api
 
 services:
+  api:
+    container_name: ${COMPOSE_PROJECT_NAME}-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5555:5555"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - db
   db:
     container_name: ${COMPOSE_PROJECT_NAME}-db
     image: postgres:latest
