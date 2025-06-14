@@ -1,14 +1,14 @@
 server:
-  port: 5252
+  port: ${SERVER_PORT:5252}
 
 grpc:
   server:
-    port: 9090
+    port: ${GRPC_SERVER_PORT:9090}
     security:
       enabled: false
   client:
     service:
-      address: localhost:9595
+      address: ${GRPC_SERVER_CLIENT_ADDRESS:localhost:9595}
       negotiation-type: plaintext
 
 
@@ -16,9 +16,9 @@ spring:
   application:
     name: api
   datasource:
-    url: jdbc:postgresql://localhost:5432/budget_manager
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/budget_manager}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
@@ -33,24 +33,21 @@ spring:
       add-mappings: false
 
 api:
-  prefix: /api/v1
+  prefix: ${API_PREFIX:/api/v1}
 
 springdoc:
   swagger-ui:
-    path: /api/v1/swagger-ui
+    path: ${SPRINGDOC_SWAGGER_UI_PATH:/api/v1/swagger-ui}
     operations-sorter: method
   api-docs:
-    path: /api/v1/doc
+    path: ${SPRINGDOC_API_DOCS_PATH:/api/v1/doc}
 
 security:
-  public-paths:
-    - "/api/v1/auth/**"
-    - "/v3/api-docs/**"
-    - "/api/v1/swagger-ui/**"
-    - "/api/v1/doc/**"
+  allowed-origins: ${SECURITY_ALLOWED_ORIGINS:http://localhost:5173,http://192.168.0.28:5173}
+  public-paths: ${SECURITY_PUBLIC_PATHS:/api/v1/auth/**,/v3/api-docs/**,/api/v1/swagger-ui/**,/api/v1/doc/**}
   jwt:
-    secret: GO6Mz+3kwgH6ybMnaeBGiMp3Anx1jKYOtPJEd3GmBf2xdZHLAgbQzXgzgxQgZhA22YEmQE/TnMvr1KsFsjDu0w==
+    secret: ${SECURITY_JWT_SECRET:GO6Mz+3kwgH6ybMnaeBGiMp3Anx1jKYOtPJEd3GmBf2xdZHLAgbQzXgzgxQgZhA22YEmQE/TnMvr1KsFsjDu0w==}
     access:
-      expiration-ms: 900000 # 15 minutes
+      expiration-ms: ${SECURITY_JWT_ACCESS_EXPIRATION_MS:900000} # 15 minutes
     refresh:
-      expiration-ms: 1209600000 # 14 days
+      expiration-ms: ${SECURITY_JWT_REFRESH_EXPIRATION_MS:1209600000} # 14 days

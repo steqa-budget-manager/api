@@ -9,25 +9,22 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5252:5252"
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      - "${SERVER_PORT}:${SERVER_PORT}"
     depends_on:
       - db
+    env_file:
+      - .env
   db:
     container_name: ${COMPOSE_PROJECT_NAME}-db
     image: postgres:latest
     restart: always
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=budget_manager
-      - POSTGRES_USERNAME=postgres
-      - POSTGRES_PASSWORD=postgres
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    env_file:
+      - .env
 
 volumes:
   postgres_data:

@@ -12,6 +12,7 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "security")
 public class SecurityProperties {
+    private String[] allowedOrigins;
     private List<String> publicPaths;
     private JwtProperties jwt;
 
